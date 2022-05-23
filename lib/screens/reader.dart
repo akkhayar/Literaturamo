@@ -1,3 +1,4 @@
+import 'package:fable/utils/constants.dart';
 import 'package:fable/models/document.dart';
 import 'package:fable/models/pdfreader.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,14 @@ class ReaderScreen extends StatefulWidget {
 
 class _ReaderScreenState extends State<ReaderScreen> {
   bool _tapped = true;
+  bool _viewAsText = false;
   OverlayEntry? _overlayEntry;
   late PdfViewerController _pdfViewerController;
+  late PdfReader _reader;
 
   @override
   void initState() {
+    _reader = PdfReader();
     _pdfViewerController = PdfViewerController();
     super.initState();
   }
@@ -26,19 +30,73 @@ class _ReaderScreenState extends State<ReaderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _tapped
-          ? AppBar(
-              title: Text(widget._doc.title),
-            )
-          : PreferredSize(
-              preferredSize: const Size(0.0, 0.0),
-              child: Container(),
-            ),
-      body: _scaffoldBody(),
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      appBar: _appBar(context),
+      body: _body(context),
+      bottomNavigationBar: _bottomNavBar(context),
     );
   }
 
-  void _showContextMenu(
+  AppBar? _appBar(BuildContext context) {
+    return _tapped
+        ? AppBar(
+            title: Text(widget._doc.title),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.category),
+                onPressed: () => setState(() => _viewAsText = !_viewAsText),
+              ),
+            ],
+          )
+        : null;
+  }
+
+  Widget _body(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() => _tapped = !_tapped);
+      },
+      child: _reader.viewDocument(
+        context,
+        widget._doc,
+        _viewAsText,
+        onTextSelectionChange: _getCbOnTextSelectionChanged(context),
+      ),
+    );
+  }
+
+  Widget? _bottomNavBar(BuildContext context) {
+    return _tapped
+        ? BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_balance_rounded),
+                label: "Library",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.library_add),
+                label: "Add",
+              ),
+            ],
+          )
+        : null;
+    ;
+  }
+
+  Function(PdfTextSelectionChangedDetails) _getCbOnTextSelectionChanged(
+      BuildContext context) {
+    return (PdfTextSelectionChangedDetails details) {
+      if (details.selectedText == null && _overlayEntry != null) {
+        _overlayEntry!.remove();
+        _overlayEntry = null;
+      } else if (details.selectedText != null && _overlayEntry == null) {
+        _showContextMenu(context, details);
+      }
+    };
+  }
+
+  _showContextMenu(
       BuildContext context, PdfTextSelectionChangedDetails details) {
     final OverlayState overlayState = Overlay.of(context)!;
     _overlayEntry = OverlayEntry(
@@ -48,24 +106,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
         child: ElevatedButton(
           onPressed: () {
             Clipboard.setData(ClipboardData(text: details.selectedText));
-            print(
-                'Text copied to clipboard: ' + details.selectedText.toString());
-            _pdfViewerController.clearSelection();
+            debugPrint(
+                'Text copied to clipboard: ${details.selectedText.toString()} and cleared ${_pdfViewerController.clearSelection().toString()}');
           },
           child: const Text('Copy', style: TextStyle(fontSize: 17)),
         ),
       ),
     );
     overlayState.insert(_overlayEntry!);
-  }
-
-  void _onTap() {
-    _tapped = !_tapped;
-    print("WIDGET TAP " + _tapped.toString());
-  }
-
-  Widget _scaffoldBody() {
-    return GestureDetector(
-        onTap: _onTap, child: PdfReader.network(widget._doc.url!));
   }
 }

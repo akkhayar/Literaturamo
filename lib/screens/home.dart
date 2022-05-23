@@ -1,4 +1,4 @@
-import 'package:fable/constants.dart';
+import 'package:fable/utils/constants.dart';
 import 'package:fable/models/document.dart';
 import 'package:fable/screens/reader.dart';
 import 'package:flutter/material.dart';
@@ -15,41 +15,31 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text(
-          appTitle,
-        ),
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.menu),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings_outlined),
-          ),
-        ],
-      ),
-      body: _scaffoldBody(),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (idx) => 0,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_outlined),
-            label: "Library",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.rss_feed_rounded),
-            label: "Feed",
-          ),
-        ],
-      ),
+      appBar: _appBar(),
+      body: _body(),
+      bottomNavigationBar: _bottomNavBar(),
     );
   }
 
-  Widget _scaffoldBody() {
+  AppBar _appBar() {
+    return AppBar(
+      title: const Text(
+        appTitle,
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.menu_rounded),
+        onPressed: () {},
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings_rounded),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _body() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 16),
       child: SingleChildScrollView(
@@ -62,6 +52,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  BottomNavigationBar _bottomNavBar() {
+    return BottomNavigationBar(
+      currentIndex: 0,
+      onTap: (idx) => 0,
+      type: BottomNavigationBarType.fixed,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_balance_rounded),
+          label: "Library",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.rss_feed_rounded),
+          label: "Feed",
+        ),
+      ],
     );
   }
 

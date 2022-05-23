@@ -2,15 +2,22 @@
 
 A new Flutter project.
 
-## Getting Started
+## Supported File Extensions
 
-This project is a starting point for a Flutter application.
+[-] Pdf
+[ ] Epub
+[ ] Text
 
-A few resources to get you started if this is your first Flutter project:
+## Built-in Extensions
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Core Features
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Vast Format Support
+2. Blazing Fast
+3. Read Together
+4. Theming
+5. Condensed Mode
+6. TTS Mode
+7. Reading Statistics
+8. Book Marks
+

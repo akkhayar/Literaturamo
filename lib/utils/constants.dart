@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 const String appTitle = "Literaturamo";
 
+/// A set of preconfigured library colors.
 class LibColors {
   LibColors._();
 
@@ -19,6 +20,7 @@ class LibColors {
   static const slate = Color(0xFF607D8B);
 }
 
+/// A set of preconfigured library themes.
 class LibThemes {
   LibThemes._();
 
@@ -78,6 +80,7 @@ class LibThemes {
       ),
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: appBarColor,
+        selectionColor: appBarBorderColor.withAlpha(60),
       ),
     );
   }
@@ -93,7 +96,7 @@ class LibThemes {
       color: Colors.white,
     ),
     bottomNavBarElevation: 1,
-    bottomNavBarColor: LibColors.hagueBlue.withAlpha(139),
+    bottomNavBarColor: LibColors.hagueBlue,
     bottomNavBarSelectedItemColor: LibColors.peach,
     bottomNavBarUnselectedItemColor: LibColors.gray,
     bottomNavBarSelectedLabelStyle: const TextStyle(
@@ -267,4 +270,117 @@ class LibThemes {
       color: Colors.grey,
     ),
   );
+}
+
+enum Languages {
+  afrikaans("af"),
+  albanian("sq"),
+  amharic("am"),
+  arabic("ar"),
+  armenian("hy"),
+  azerbaijani("az"),
+  basque("eu"),
+  belarusian("be"),
+  bengali("bn"),
+  bosnian("bs"),
+  bulgarian("bg"),
+  catalan("ca"),
+  cebuano("ceb"),
+  chichewa("ny"),
+  chineseSimplified("zh-cn"),
+  chineseTraditional("zh-tw"),
+  corsican("co"),
+  croatian("hr"),
+  czech("cs"),
+  danish("da"),
+  dutch("nl"),
+  english("en"),
+  esperanto("eo"),
+  estonian("et"),
+  filipino("tl"),
+  finnish("fi"),
+  french("fr"),
+  frisian("fy"),
+  galician("gl"),
+  georgian("ka"),
+  german("de"),
+  greek("el"),
+  gujarati("gu"),
+  haitianCreole("ht"),
+  hausa("ha"),
+  hawaiian("haw"),
+  hebrew("he"),
+  hindi("hi"),
+  hmong("hmn"),
+  hungarian("hu"),
+  icelandic("is"),
+  igbo("ig"),
+  indonesian("id"),
+  irish("ga"),
+  italian("it"),
+  japanese("ja"),
+  javanese("jw"),
+  kannada("kn"),
+  kazakh("kk"),
+  khmer("km"),
+  korean("ko"),
+  kurdishKurmanji("ku"),
+  kyrgyz("ky"),
+  lao("lo"),
+  latin("la"),
+  latvian("lv"),
+  lithuanian("lt"),
+  luxembourgish("lb"),
+  macedonian("mk"),
+  malagasy("mg"),
+  malay("ms"),
+  malayalam("ml"),
+  maltese("mt"),
+  maori("mi"),
+  marathi("mr"),
+  mongolian("mn"),
+  myanmar("my"),
+  burmese("my"),
+  nepali("ne"),
+  norwegian("no"),
+  odia("or"),
+  pashto("ps"),
+  persian("fa"),
+  polish("pl"),
+  portuguese("pt"),
+  punjabi("pa"),
+  romanian("ro"),
+  russian("ru"),
+  samoan("sm"),
+  scotsGaelic("gd"),
+  serbian("sr"),
+  sesotho("st"),
+  shona("sn"),
+  sindhi("sd"),
+  sinhala("si"),
+  slovak("sk"),
+  slovenian("sl"),
+  somali("so"),
+  spanish("es"),
+  sundanese("su"),
+  swahili("sw"),
+  swedish("sv"),
+  tajik("tg"),
+  tamil("ta"),
+  telugu("te"),
+  thai("th"),
+  turkish("tr"),
+  ukrainian("uk"),
+  urdu("ur"),
+  uyghur("ug"),
+  uzbek("uz"),
+  vietnamese("vi"),
+  welsh("cy"),
+  xhosa("xh"),
+  yiddish("yi"),
+  yoruba("yo"),
+  zulu("zu");
+
+  final String code;
+  const Languages(this.code);
 }
