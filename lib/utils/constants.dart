@@ -32,7 +32,6 @@ class LibThemes {
     required double appBarBorderWidth,
     required TextStyle titleTextStyle,
     required double bottomNavBarElevation,
-    required Color bottomNavBarColor,
     required Color bottomNavBarSelectedItemColor,
     required Color bottomNavBarUnselectedItemColor,
     required TextStyle bottomNavBarSelectedLabelStyle,
@@ -64,7 +63,7 @@ class LibThemes {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         elevation: bottomNavBarElevation,
-        backgroundColor: bottomNavBarColor,
+        backgroundColor: scaffoldBackgroundColor,
         selectedItemColor: bottomNavBarSelectedItemColor,
         selectedLabelStyle: bottomNavBarSelectedLabelStyle,
         unselectedItemColor: bottomNavBarUnselectedItemColor,
@@ -85,7 +84,7 @@ class LibThemes {
     );
   }
 
-  static var basicDark = _makeTheme(
+  static final basicDark = _makeTheme(
     appBarColor: LibColors.hagueBlue,
     appBarElevation: 0,
     appBarBorderColor: LibColors.peach,
@@ -94,10 +93,10 @@ class LibThemes {
     titleTextStyle: GoogleFonts.playfairDisplay(
       fontSize: 20,
       color: Colors.white,
+      fontWeight: FontWeight.bold,
     ),
     bottomNavBarElevation: 1,
-    bottomNavBarColor: LibColors.hagueBlue,
-    bottomNavBarSelectedItemColor: LibColors.peach,
+    bottomNavBarSelectedItemColor: Colors.white,
     bottomNavBarUnselectedItemColor: LibColors.gray,
     bottomNavBarSelectedLabelStyle: const TextStyle(
       color: Colors.white,
@@ -112,15 +111,11 @@ class LibThemes {
     bodyText2: GoogleFonts.playfairDisplay(
       color: Colors.white,
     ),
-    subtitle1: GoogleFonts.playfairDisplay(
-      color: Colors.white,
-    ),
-    subtitle2: GoogleFonts.playfairDisplay(
-      color: Colors.grey,
-    ),
+    subtitle1: GoogleFonts.playfairDisplay(color: Colors.white),
+    subtitle2: GoogleFonts.playfairDisplay(color: Colors.grey),
   );
 
-  static var basicLight = _makeTheme(
+  static final basicLight = _makeTheme(
     appBarColor: Colors.white,
     appBarElevation: 0,
     appBarBorderColor: LibColors.hagueBlue,
@@ -129,11 +124,11 @@ class LibThemes {
     titleTextStyle: GoogleFonts.playfairDisplay(
       fontSize: 20,
       color: Colors.black,
+      fontWeight: FontWeight.bold,
     ),
     bottomNavBarElevation: 1,
-    bottomNavBarColor: Colors.white.withAlpha(139),
     bottomNavBarSelectedItemColor: LibColors.hagueBlue,
-    bottomNavBarUnselectedItemColor: Colors.white,
+    bottomNavBarUnselectedItemColor: Colors.grey,
     bottomNavBarSelectedLabelStyle: const TextStyle(
       color: Colors.black,
       fontStyle: FontStyle.italic,
@@ -155,54 +150,7 @@ class LibThemes {
     ),
   );
 
-  static var test = ThemeData(
-    appBarTheme: AppBarTheme(
-      color: LibColors.hagueBlue,
-      elevation: 1,
-      shape: const Border(
-        bottom: BorderSide(
-          color: LibColors.peach,
-          width: 1,
-        ),
-      ),
-      titleTextStyle: GoogleFonts.playfairDisplay(
-        fontSize: 20,
-        color: Colors.black,
-      ),
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      elevation: 1,
-      backgroundColor: LibColors.hagueBlue,
-      selectedItemColor: LibColors.peach,
-      selectedLabelStyle: TextStyle(
-        color: Colors.black,
-        fontStyle: FontStyle.italic,
-      ),
-      unselectedItemColor: LibColors.gray,
-      unselectedLabelStyle: TextStyle(
-        color: LibColors.gray,
-      ),
-    ),
-    scaffoldBackgroundColor: LibColors.hagueBlue,
-    primaryColor: LibColors.hagueBlue,
-    iconTheme: const IconThemeData(color: LibColors.peach),
-    textTheme: TextTheme(
-      bodyText2: GoogleFonts.playfairDisplay(
-        color: Colors.black,
-      ),
-      subtitle1: GoogleFonts.playfairDisplay(
-        color: Colors.black,
-      ),
-      subtitle2: GoogleFonts.playfairDisplay(
-        color: Colors.grey,
-      ),
-    ),
-    textSelectionTheme: const TextSelectionThemeData(
-      selectionHandleColor: LibColors.hagueBlue,
-    ),
-  );
-
-  static var solarizedDark = _makeTheme(
+  static final solarizedDark = _makeTheme(
     appBarColor: LibColors.solarizedLightBlue,
     appBarElevation: 0,
     appBarBorderColor: LibColors.waterBlue,
@@ -211,9 +159,9 @@ class LibThemes {
     titleTextStyle: GoogleFonts.playfairDisplay(
       fontSize: 20,
       color: Colors.white,
+      fontWeight: FontWeight.bold,
     ),
     bottomNavBarElevation: 1,
-    bottomNavBarColor: LibColors.solarizedLightBlue,
     bottomNavBarSelectedItemColor: LibColors.waterBlue,
     bottomNavBarUnselectedItemColor: LibColors.lightGray,
     bottomNavBarSelectedLabelStyle: const TextStyle(
@@ -237,7 +185,7 @@ class LibThemes {
     ),
   );
 
-  static var slate = _makeTheme(
+  static final slate = _makeTheme(
     appBarColor: LibColors.slate,
     appBarElevation: 1,
     appBarBorderColor: LibColors.darkGray,
@@ -246,9 +194,9 @@ class LibThemes {
     titleTextStyle: GoogleFonts.playfairDisplay(
       fontSize: 20,
       color: Colors.white,
+      fontWeight: FontWeight.bold,
     ),
     bottomNavBarElevation: 1,
-    bottomNavBarColor: LibColors.slate,
     bottomNavBarSelectedItemColor: Colors.white,
     bottomNavBarUnselectedItemColor: LibColors.darkGray,
     bottomNavBarSelectedLabelStyle: const TextStyle(
@@ -272,7 +220,7 @@ class LibThemes {
   );
 }
 
-enum Languages {
+enum Language {
   afrikaans("af"),
   albanian("sq"),
   amharic("am"),
@@ -382,5 +330,5 @@ enum Languages {
   zulu("zu");
 
   final String code;
-  const Languages(this.code);
+  const Language(this.code);
 }

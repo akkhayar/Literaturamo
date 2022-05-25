@@ -1,10 +1,16 @@
+import 'package:fable/screens/viewer.dart';
+import 'package:fable/utils/api.dart';
+import 'package:flutter/material.dart';
 import 'package:pdf_text/pdf_text.dart';
 
 /// Types that a document can be of.
 enum DocumentType {
-  pdf,
-  epub,
-  txt,
+  pdf("pdf"),
+  epub("epub"),
+  txt("txt");
+
+  final String code;
+  const DocumentType(this.code);
 }
 
 /// A standalone document wrapper that signifies all permissible document
@@ -16,11 +22,13 @@ class Document {
   DocumentType type;
   String uri;
   bool isExternal;
+  String? language;
   PDFDoc? _pdfDoc;
   final Map<int, String> _textCache = {};
 
   Document(this.title, this.date, this.totalPageNum, this.type, this.uri,
-      this.isExternal);
+      this.isExternal,
+      {this.language});
 
   static List<Document> docList = [
     Document(
@@ -84,5 +92,47 @@ class Document {
   @override
   String toString() {
     return "<Document $type '$title' ($date) @$uri@>";
+  }
+
+  Widget listTileWidget(BuildContext context) {
+    final viewer = ContributionPoints.getFileViewer(type);
+    if (viewer == null) {
+      return Container();
+    }
+
+    return ListTile(
+      shape: Border(
+        bottom: BorderSide(
+          color: Theme.of(context).iconTheme.color!,
+          width: 0.4,
+        ),
+      ),
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ViewerScreen(this, viewer),
+          ),
+        ),
+      },
+      title: Flexible(
+        child: Text(
+          title,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
+      ),
+      leading: Icon(
+        Icons.book_online_rounded,
+        color: Theme.of(context).iconTheme.color,
+      ),
+      subtitle: Text(
+        "$totalPageNum Pages",
+        style: Theme.of(context).textTheme.subtitle2,
+      ),
+      trailing: Text(
+        date,
+      ),
+    );
   }
 }
