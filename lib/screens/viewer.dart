@@ -20,13 +20,13 @@ class _ViewerScreenState extends State<ViewerScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: _appBar(context),
-      body: _body(context),
-      bottomNavigationBar: _bottomNavBar(context),
+      appBar: _appBar(),
+      body: _body(),
+      bottomNavigationBar: _bottomNavBar(),
     );
   }
 
-  AppBar? _appBar(BuildContext context) {
+  AppBar? _appBar() {
     return _tapped
         ? AppBar(
             title: Text(widget._doc.title),
@@ -40,7 +40,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
         : null;
   }
 
-  Widget _body(BuildContext context) {
+  Widget _body() {
     return GestureDetector(
       onTap: () {
         setState(() => _tapped = !_tapped);
@@ -53,7 +53,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
     );
   }
 
-  Widget? _bottomNavBar(BuildContext context) {
+  Widget? _bottomNavBar() {
     return null;
   }
 }

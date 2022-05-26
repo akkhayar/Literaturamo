@@ -1,17 +1,17 @@
 import 'package:fable/models/document.dart';
 import 'package:fable/models/file_viewer.dart';
+import 'package:fable/models/text_parser.dart';
 import 'package:fable/utils/api.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  ContributionPoints.registerFileViewer(EpubViewer());
+  ContributionPoints.registerFileViewer(_EpubViewer());
+  ContributionPoints.registerTextParser(_EpubTextParser());
 }
 
-class EpubViewer implements FileViewer {
+class _EpubViewer implements FileViewer {
   @override
   DocumentType supportedType = DocumentType.epub;
-
-  EpubViewer();
 
   @override
   Widget viewDocument(
@@ -21,4 +21,9 @@ class EpubViewer implements FileViewer {
   ) {
     return Container();
   }
+}
+
+class _EpubTextParser implements TextParser {
+  @override
+  DocumentType supportedType = DocumentType.epub;
 }
