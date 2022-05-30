@@ -1,59 +1,109 @@
-import 'package:fable/models/document.dart';
-import 'package:fable/models/file_viewer.dart';
+import 'package:literaturamo/models/document.dart';
+import 'package:literaturamo/models/file_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:literaturamo/models/text_parser.dart';
+import 'package:literaturamo/utils/api.dart';
 
 class ViewerScreen extends StatefulWidget {
-  final Document _doc;
-  final FileViewer _viewer;
+  final Document document;
+  final int defaultPage;
+  final FileViewer? fileViewer;
 
-  const ViewerScreen(this._doc, this._viewer, {Key? key}) : super(key: key);
+  const ViewerScreen(
+      {required this.document, this.defaultPage = 0, this.fileViewer, Key? key})
+      : super(key: key);
+
   @override
   State<ViewerScreen> createState() => _ViewerScreenState();
 }
 
 class _ViewerScreenState extends State<ViewerScreen> {
-  bool _tapped = true;
-  bool _viewAsText = false;
+  late final FileViewer fileViewer;
+  late final bool hasTxtParser;
+  bool invert = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fileViewer = widget.fileViewer ??
+        ContributionPoints.getFileViewer(widget.document.type);
+    fileViewer.load(widget.document);
+    hasTxtParser =
+        ContributionPoints.getTextParser(fileViewer.supportedDocType) != null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: _appBar(),
-      body: _body(),
-      bottomNavigationBar: _bottomNavBar(),
+      appBar: AppBar(
+        title: Text(widget.document.title),
+        actions: _actions(),
+      ),
+      body: fileViewer.viewDocument(context, widget.document, invert: invert),
     );
   }
 
-  AppBar? _appBar() {
-    return _tapped
-        ? AppBar(
-            title: Text(widget._doc.title),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.category),
-                onPressed: () => setState(() => _viewAsText = !_viewAsText),
-              ),
-            ],
-          )
-        : null;
+  List<Widget> _conditionalActions() {
+    final List<Widget> actions = [];
+    if (hasTxtParser) {
+      actions.add(IconButton(
+        icon: const Icon(Icons.text_fields),
+        onPressed: _transcribe,
+      ));
+    }
+    return actions;
   }
 
-  Widget _body() {
-    return GestureDetector(
-      onTap: () {
-        setState(() => _tapped = !_tapped);
-      },
-      child: widget._viewer.viewDocument(
-        context,
-        widget._doc,
-        _viewAsText,
+  List<Widget> _actions() {
+    return [
+      IconButton(
+        icon: const Icon(Icons.brightness_high),
+        onPressed: _invertColor,
+      ),
+      ..._conditionalActions(),
+      PopupMenuButton(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        itemBuilder: (context) {
+          return [
+            for (var i = 0; i <= fileViewer.secondaryActions.length; i++)
+              PopupMenuItem<int>(
+                value: i,
+                child: Row(
+                  children: [
+                    fileViewer.secondaryActions[i].icon,
+                    fileViewer.secondaryActions[i].label!,
+                  ],
+                ),
+              )
+          ];
+        },
+        onSelected: (int value) {
+          fileViewer.secondaryActions
+              .elementAt(value)
+              .onCall(context, widget.document);
+        },
+      )
+    ];
+  }
+
+  void _invertColor() {
+    setState(() => invert = !invert);
+  }
+
+  void _transcribe() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ViewerScreen(
+            document: widget.document,
+            fileViewer:
+                ContributionPoints.getFileViewer(DocumentType.transcript),
+            defaultPage: fileViewer.controller!
+                .currentPage, // CONTROLLER MAY BE NULL SOMETIMES SO FIX THIS
+          );
+        },
       ),
     );
-  }
-
-  Widget? _bottomNavBar() {
-    return null;
   }
 }

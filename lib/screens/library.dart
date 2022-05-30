@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:literaturamo/utils/constants.dart';
 
-class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+class LibraryScreen extends StatefulWidget {
+  const LibraryScreen({Key? key}) : super(key: key);
 
   @override
-  State<SettingScreen> createState() => _SettingScreenState();
+  State<LibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "$appTitle Settings",
+          "$appTitle Library",
         ),
       ),
     );

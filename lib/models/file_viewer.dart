@@ -1,4 +1,4 @@
-import 'package:fable/models/document.dart';
+import 'package:literaturamo/models/document.dart';
 import 'package:flutter/material.dart';
 
 /// An abstract class that identifies a FileViewer.
@@ -12,7 +12,32 @@ import 'package:flutter/material.dart';
 /// ContributionPoints.registerFileViewer(Viewer());
 /// ```
 abstract class FileViewer {
-  abstract DocumentType supportedType;
+  late final List<FileViewerAction> secondaryActions;
+  late final DocumentType supportedDocType;
+  FileViewerController? controller;
 
-  Widget viewDocument(BuildContext context, Document doc, bool viewAsText);
+  FileViewer(
+      {this.secondaryActions = const [], required this.supportedDocType});
+
+  Widget viewDocument(BuildContext context, Document document,
+      {bool invert = false, int defaultPage = 0});
+
+  void load(Document document) {}
+}
+
+class FileViewerController {
+  final int defaultPage;
+  final void Function(int page) gotoPage;
+  int currentPage;
+
+  FileViewerController({required this.defaultPage, required this.gotoPage})
+      : currentPage = defaultPage;
+}
+
+class FileViewerAction {
+  final Icon icon;
+  final Text? label;
+  final Function(BuildContext context, Document doc) onCall;
+
+  FileViewerAction({required this.icon, this.label, required this.onCall});
 }

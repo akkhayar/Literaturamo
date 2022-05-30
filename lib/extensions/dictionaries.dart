@@ -1,14 +1,14 @@
 import 'dart:convert';
-import 'package:fable/models/dictionary.dart';
-import 'package:fable/utils/constants.dart';
-import 'package:fable/utils/api.dart';
+import 'package:literaturamo/models/dictionary.dart';
+import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/utils/api.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
   ContributionPoints.registerLanguageDictionary(EnglishLanguageDictionary());
 }
 
-const api = "https://api.dictionaryapi.dev/api/";
+const api = "https://api.dictionaryapi.dev/api/v2/entries";
 
 class EnglishLanguageDictionary implements LanguageDictionary {
   @override
@@ -16,11 +16,13 @@ class EnglishLanguageDictionary implements LanguageDictionary {
 
   @override
   Future<DictionaryEntry?> getDictionaryEntry(String word) async {
-    final res = await http.get(Uri.parse("${api}entries/en/"));
+    if (word.length < 3 || word.contains(" ")) return null;
+    final endpoint = Uri.parse("$api/${language.code}/${word.toLowerCase()}");
+    final res = await http.get(endpoint);
     if (res.statusCode != 200) {
       return null;
     }
-    final resp = (jsonDecode(res.body))[0];
-    return DictionaryEntry.fromJson(word, language, resp);
+    final resp = jsonDecode(res.body);
+    return DictionaryEntry.fromJson(word, language, resp[0]);
   }
 }

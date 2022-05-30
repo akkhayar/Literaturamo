@@ -1,4 +1,4 @@
-import 'package:fable/utils/constants.dart';
+import 'package:literaturamo/utils/constants.dart';
 
 typedef StrMap = Map<String, String>;
 
@@ -21,7 +21,7 @@ abstract class LanguageDictionary {
 /// A resultant dictionary entry when a word is queried for meaning.
 class DictionaryEntry {
   final String query;
-  final String origin;
+  final String? origin;
   final Language language;
   final List<PhoneticRecord> phonetics;
   final List<WordMeaning> meanings;
@@ -30,7 +30,7 @@ class DictionaryEntry {
       {required this.language,
       required this.query,
       required this.phonetics,
-      required this.origin,
+      this.origin,
       required this.meanings});
 
   factory DictionaryEntry.fromJson(
@@ -38,15 +38,15 @@ class DictionaryEntry {
     return DictionaryEntry(
       language: lang,
       query: word,
-      phonetics: (json["phonetics"] as List<StrMap>)
+      phonetics: (json["phonetics"] as List<dynamic>)
           .map(
-            (StrMap phonetic) => PhoneticRecord.fromJson(phonetic),
+            (phonetic) => PhoneticRecord.fromJson(phonetic),
           )
           .toList(),
-      origin: json["origin"]!,
-      meanings: (json["meanings"] as List<StrMap>)
+      origin: json["origin"],
+      meanings: (json["meanings"] as List<dynamic>)
           .map(
-            (StrMap meaning) => WordMeaning.fromJson(meaning),
+            (meaning) => WordMeaning.fromJson(meaning),
           )
           .toList(),
     );
@@ -56,14 +56,14 @@ class DictionaryEntry {
 /// A phonetic sampling of a word in the International Phonetic Alphabet
 /// and an optional audio URL that vocalizes it.
 class PhoneticRecord {
-  final String text;
+  final String? text;
   final String? audioUrl;
 
   PhoneticRecord({required this.text, required this.audioUrl});
 
-  factory PhoneticRecord.fromJson(StrMap json) {
+  factory PhoneticRecord.fromJson(json) {
     return PhoneticRecord(
-      text: json["text"]!,
+      text: json["text"],
       audioUrl: json["audio"],
     );
   }
@@ -78,12 +78,12 @@ class WordMeaning {
     required this.definitions,
   });
 
-  factory WordMeaning.fromJson(StrMap json) {
+  factory WordMeaning.fromJson(json) {
     return WordMeaning(
         partOfSpeech: json["partOfSpeech"]!,
-        definitions: (json["definitions"] as List<StrMap>)
+        definitions: (json["definitions"] as List<dynamic>)
             .map(
-              (Map<String, dynamic> def) => WordDefinition.fromJson(def),
+              (def) => WordDefinition.fromJson(def),
             )
             .toList());
   }
@@ -91,21 +91,21 @@ class WordMeaning {
 
 class WordDefinition {
   final String definition;
-  final String example;
-  final List<String> synonyms;
-  final List<String> antonyms;
+  final String? example;
+  final List<dynamic> synonyms;
+  final List<dynamic> antonyms;
 
   WordDefinition({
     required this.definition,
-    required this.example,
+    this.example,
     required this.synonyms,
     required this.antonyms,
   });
 
-  factory WordDefinition.fromJson(Map<String, dynamic> json) {
+  factory WordDefinition.fromJson(json) {
     return WordDefinition(
       definition: json["definition"]!,
-      example: json["example"]!,
+      example: json["example"],
       synonyms: json["synonyms"],
       antonyms: json["antonyms"],
     );

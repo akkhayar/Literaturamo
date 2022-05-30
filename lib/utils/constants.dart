@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const String appTitle = "Literaturamo";
+const String recentDocsBoxName = "recent50docs";
+const int docHiveTypeId = 0;
+const int docTypeHiveTypeId = 1;
+
+Color saturate(Color original, int amount) {
+  final copy = original;
+  return copy
+      .withBlue(copy.blue + amount)
+      .withGreen(copy.green + amount)
+      .withRed(copy.red + amount);
+}
 
 /// A set of preconfigured library colors.
 class LibColors {
@@ -77,10 +88,10 @@ class LibThemes {
         subtitle1: subtitle1,
         subtitle2: subtitle2,
       ),
-      textSelectionTheme: TextSelectionThemeData(
-        selectionHandleColor: appBarColor,
-        selectionColor: appBarBorderColor.withAlpha(60),
-      ),
+      // textSelectionTheme: TextSelectionThemeData(
+      //   selectionHandleColor: appBarColor,
+      //   selectionColor: appBarBorderColor.withAlpha(60),
+      // ),
     );
   }
 

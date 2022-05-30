@@ -1,18 +1,16 @@
-import 'package:fable/utils/api.dart';
-import 'package:fable/utils/constants.dart';
-import 'package:fable/screens/home.dart';
+import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:literaturamo/utils/tasks.dart' as tasks;
 
 /// TODO:
-///   1. Work on night mode PDF rendering
-///   2. Work on better animated retrival of the
-///     appbar on tap
-///   3. Setup overlay that shows the definition of a
-///     word on select
-///   4. Fix flexible error
+/// 1. Different colors for different formats
+/// 2. Better skeleton loading for opening text files
+/// 3. Too intensive textual parsing for
 
-void main() {
-  loadExtensions();
+void main() async {
+  await tasks.setup();
   runApp(const App());
 }
 
@@ -22,6 +20,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       title: appTitle,
       theme: LibThemes.basicDark,
       home: const HomeScreen(),
