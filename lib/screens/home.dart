@@ -1,11 +1,15 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/rendering.dart';
+import 'package:literaturamo/screens/discover.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:literaturamo/screens/library.dart';
+import 'package:literaturamo/screens/recents.dart';
 import 'package:literaturamo/screens/viewer.dart';
 import 'package:literaturamo/utils/api.dart';
 import 'package:literaturamo/utils/constants.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/screens/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:literaturamo/widgets/document.dart';
 import 'package:collection/collection.dart';
 
@@ -19,11 +23,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Box<Document> recentDocuments;
   Document? lastOpened;
+  int currentIndex = 0;
+  late PageController pageController;
 
   @override
   void initState() {
     super.initState();
     recentDocuments = Hive.box<Document>(recentDocsBoxName);
+    pageController = PageController();
   }
 
   @override
@@ -31,7 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: _appBar(),
-      body: _recentDocuments(),
+      body: PageView(
+        controller: pageController,
+        onPageChanged: (idx) => setState(() => currentIndex = idx),
+        scrollDirection: Axis.horizontal,
+        children: const [RecentScreen(), LibraryScreen(), DiscoverScreen()],
+      ),
       bottomNavigationBar: _bottomNavBar(),
       floatingActionButton: _openRecentDocument(),
     );
@@ -44,11 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.restore_from_trash),
-          onPressed: () => recentDocuments.clear(),
-        ),
-        IconButton(
-          icon: const Icon(Icons.add),
+          icon: const Icon(Icons.note_add_rounded),
           onPressed: () async {
             final picked = await FilePicker.platform.pickFiles(
               dialogTitle: "Open a Document",
@@ -72,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         IconButton(
           icon: const Icon(Icons.settings_rounded),
+          tooltip: "Settings",
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
@@ -80,26 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _recentDocuments() {
-    return ValueListenableBuilder(
-      valueListenable: recentDocuments.listenable(),
-      builder: (context, Box<Document> box, _) {
-        if (box.values.isEmpty) {
-          return const Center(child: Text("No Recent Docs"));
-        }
-        final orderedBox = box.values.toList();
-        orderedBox.sort((a, b) => Document.compare(a, b));
-        return ListView.builder(
-          itemCount: recentDocuments.length,
-          itemBuilder: (context, listIndex) => RecentDocumentListTile(
-            document: orderedBox.elementAt(listIndex),
-            onTap: (doc) => _openDocument(doc, fromRecentDocs: true),
-          ),
-        );
-      },
     );
   }
 
@@ -124,30 +113,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _bottomNavBar() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).iconTheme.color!,
-            width: 1,
-          ),
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: (idx) {
+        currentIndex = idx;
+        pageController.animateToPage(
+          idx,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.ease,
+        );
+      },
+      type: BottomNavigationBarType.fixed,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_balance_rounded),
+          label: "Recent",
         ),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (idx) => 0,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_rounded),
-            label: "Library",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.rss_feed_rounded),
-            label: "Feed",
-          ),
-        ],
-      ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.import_contacts_rounded),
+          label: "Library",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.explore_rounded),
+          label: "Discover",
+        ),
+      ],
     );
   }
 
@@ -162,9 +152,10 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         _openDocument(lastOpened!, fromRecentDocs: true);
       },
-      backgroundColor: Theme.of(context).iconTheme.color,
-      child: const Icon(
-        Icons.collections_bookmark_rounded,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      child: Icon(
+        Icons.local_library_rounded,
+        color: Theme.of(context).colorScheme.onSecondary,
       ),
     );
   }

@@ -17,7 +17,8 @@ class EnglishLanguageDictionary implements LanguageDictionary {
   @override
   Future<DictionaryEntry?> getDictionaryEntry(String word) async {
     if (word.length < 3 || word.contains(" ")) return null;
-    final endpoint = Uri.parse("$api/${language.code}/${word.toLowerCase()}");
+    word = word.toLowerCase().trim();
+    final endpoint = Uri.parse("$api/${language.code}/$word");
     final res = await http.get(endpoint);
     if (res.statusCode != 200) {
       return null;

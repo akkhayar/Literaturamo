@@ -2,7 +2,7 @@ import 'dart:ui';
 
 class TextSelectionChange {
   final String text;
-  final Rect region;
+  final Rect? region;
 
-  TextSelectionChange({required this.text, required this.region});
+  TextSelectionChange({required this.text, this.region});
 }

@@ -43,14 +43,15 @@ dependencies:
   flutter_cached_pdfview: ^0.4.1
   flutter_highlight: ^0.7.0
   intl: ^0.17.0
-  syncfusion_flutter_pdfviewer: ^20.1.57-beta
-  syncfusion_flutter_core: ^20.1.57
+  syncfusion_flutter_pdfviewer: ^20.1.58-beta
   invert_colors: ^0.0.4
   file_picker: ^4.6.0
   collapsible_sidebar: ^2.0.1+2
   hive: ^2.2.1
   hive_flutter: ^1.1.0
   shimmer: ^2.0.0
+  fuzzy: ^0.3.0
+  timeago: ^3.2.2
 
 dev_dependencies:
   hive_generator: ^1.1.3

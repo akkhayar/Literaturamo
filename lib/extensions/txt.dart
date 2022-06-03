@@ -72,21 +72,20 @@ class _TxtViewer extends FileViewer {
           15, kToolbarHeight - MediaQuery.of(context).padding.top, 0, 15),
       child: SelectableText(
         snapshot.data ?? "Loading..",
+        toolbarOptions: const ToolbarOptions(),
         textAlign: TextAlign.justify,
         style: GoogleFonts.notoSansGeorgian(color: Colors.white, fontSize: 30),
-        onSelectionChanged: (selection, cause) {
-          debugPrint(cause.toString());
-          ContributionPoints.textSelectionChanged(
-            context,
-            TextSelectionChange(
-              text: snapshot.data!.substring(selection.start, selection.end),
-              region: Rect.fromPoints(
-                const Offset(100, 200),
-                const Offset(100, 200),
-              ),
+        onSelectionChanged: (selection, cause) =>
+            ContributionPoints.textSelectionChanged(
+          context,
+          TextSelectionChange(
+            text: snapshot.data!.substring(selection.start, selection.end),
+            region: Rect.fromPoints(
+              const Offset(100, 200),
+              const Offset(100, 200),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
     // SkeletonLoader(

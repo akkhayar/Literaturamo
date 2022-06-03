@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:literaturamo/models/document.dart';
+import 'package:timeago/timeago.dart';
 
 class RecentDocumentListTile extends StatelessWidget {
   final Document document;
@@ -29,29 +30,33 @@ class RecentDocumentListTile extends StatelessWidget {
       formatStr = "yyyy-MM-dd – kk:mm";
     }
 
-    return ListTile(
-      shape: Border(
-        bottom: BorderSide(
-          color: Theme.of(context).iconTheme.color!,
-          width: 0.4,
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).dialogBackgroundColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 18,
+        vertical: 10,
+      ),
+      child: ListTile(
+        onTap: () => onTap(document),
+        title: Text(
+          document.title,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.subtitle1,
         ),
-      ),
-      onTap: () => onTap(document),
-      title: Text(
-        document.title,
-        overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.subtitle1,
-      ),
-      leading: Icon(
-        Icons.book_online_rounded,
-        color: Theme.of(context).iconTheme.color,
-      ),
-      subtitle: Text(
-        "${document.totalPageNum} Pages",
-        style: Theme.of(context).textTheme.subtitle2,
-      ),
-      trailing: Text(
-        "$leading ${DateFormat(formatStr).format(openedAt)}",
+        leading: Icon(
+          Icons.book_online_rounded,
+          color: Theme.of(context).iconTheme.color,
+        ),
+        subtitle: Text(
+          "${document.totalPageNum} Pages",
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        trailing: Text(
+          "$leading ${DateFormat(formatStr).format(openedAt)}",
+        ),
       ),
     );
   }

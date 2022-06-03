@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 /// ContributionPoints.registerFileViewer(Viewer());
 /// ```
 abstract class FileViewer {
-  late final List<FileViewerAction> secondaryActions;
+  late List<FileViewerAction> secondaryActions;
   late final DocumentType supportedDocType;
   FileViewerController? controller;
 

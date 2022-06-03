@@ -4,11 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:literaturamo/utils/tasks.dart' as tasks;
 
-/// TODO:
-/// 1. Different colors for different formats
-/// 2. Better skeleton loading for opening text files
-/// 3. Too intensive textual parsing for
-
 void main() async {
   await tasks.setup();
   runApp(const App());
