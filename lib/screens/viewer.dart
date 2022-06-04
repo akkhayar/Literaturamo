@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/services.dart';
 import 'package:literaturamo/models/dictionary.dart';
 import 'package:literaturamo/models/document.dart';
@@ -11,11 +9,11 @@ import 'package:literaturamo/widgets/definition.dart';
 
 class ViewerScreen extends StatefulWidget {
   final Document document;
-  final int defaultPage;
+  final int? defaultPage;
   final FileViewer? fileViewer;
 
   const ViewerScreen(
-      {required this.document, this.defaultPage = 0, this.fileViewer, Key? key})
+      {required this.document, this.defaultPage, this.fileViewer, Key? key})
       : super(key: key);
 
   @override
@@ -25,7 +23,8 @@ class ViewerScreen extends StatefulWidget {
 class _ViewerScreenState extends State<ViewerScreen> {
   late final FileViewer fileViewer;
   late final bool hasTxtParser;
-  bool invert = true;
+  late bool invert;
+  bool inspect = true;
 
   @override
   void initState() {
@@ -33,39 +32,56 @@ class _ViewerScreenState extends State<ViewerScreen> {
     fileViewer = widget.fileViewer ??
         ContributionPoints.getFileViewer(widget.document.type);
     fileViewer.load(widget.document);
+    invert = SettingBox.get(SettingBoxOptions.defaultFileViewerInversion);
     hasTxtParser =
         ContributionPoints.getTextParser(fileViewer.supportedDocType) != null;
+
+    // Occurance.onReadNewPage((int _) => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.document.title),
-        actions: _actions(),
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      appBar: inspect
+          ? AppBar(
+              title: Text(widget.document.title),
+              actions: _actions(),
+            )
+          : null,
+      body: fileViewer.viewDocument(
+        context,
+        widget.document,
+        invert: invert,
+        defaultPage: widget.defaultPage,
+        onTap: () {
+          setState(() => inspect = !inspect);
+          if (!inspect) {
+            SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+          } else {
+            SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+          }
+        },
       ),
-      body: fileViewer.viewDocument(context, widget.document, invert: invert),
+      bottomNavigationBar: _bottomAppBar(),
     );
   }
 
   List<Widget> _conditionalActions() {
-    final List<Widget> actions = [];
-    if (hasTxtParser) {
-      actions.add(
+    return [
+      if (hasTxtParser)
         IconButton(
           tooltip: "Extract Text",
           icon: const Icon(Icons.text_fields),
           onPressed: _transcribe,
-        ),
-      );
-    }
-    return actions;
+        )
+    ];
   }
 
   List<Widget> _secondaryActions() {
-    final List<Widget> actions = [];
-    if (fileViewer.secondaryActions.isNotEmpty) {
-      actions.add(
+    return [
+      if (fileViewer.secondaryActions.isNotEmpty)
         PopupMenuButton(
           tooltip: "Other Options",
           color: Theme.of(context).scaffoldBackgroundColor,
@@ -76,7 +92,9 @@ class _ViewerScreenState extends State<ViewerScreen> {
                   value: i,
                   child: Row(
                     children: [
-                      fileViewer.secondaryActions[i].icon,
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: fileViewer.secondaryActions[i].icon),
                       fileViewer.secondaryActions[i].label!,
                     ],
                   ),
@@ -88,10 +106,8 @@ class _ViewerScreenState extends State<ViewerScreen> {
                 .elementAt(value)
                 .onCall(context, widget.document);
           },
-        ),
-      );
-    }
-    return actions;
+        )
+    ];
   }
 
   List<Widget> _actions() {
@@ -112,10 +128,30 @@ class _ViewerScreenState extends State<ViewerScreen> {
   }
 
   void _invertColor() {
+    SettingBox.put(SettingBoxOptions.defaultFileViewerInversion, !invert);
     setState(() => invert = !invert);
   }
 
   final TextEditingController _controller = TextEditingController();
+
+  BottomAppBar? _bottomAppBar() => inspect && fileViewer.controller != null
+      ? BottomAppBar(
+          color: Theme.of(context).appBarTheme.backgroundColor,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Theme.of(context).colorScheme.secondary,
+                  width: 1,
+                ),
+              ),
+            ),
+            margin: const EdgeInsets.only(bottom: 3),
+            child: Text(
+                textAlign: TextAlign.center,
+                "${fileViewer.controller!.currentPage}/${widget.document.totalPageNum}"),
+          ))
+      : null;
 
   void _displayDictionary() {
     // ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0)

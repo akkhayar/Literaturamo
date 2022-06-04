@@ -22,6 +22,7 @@ class _TxtViewer extends FileViewer {
         );
 
   Future<String>? data;
+  bool? invert;
 
   @override
   void load(Document document) {
@@ -34,7 +35,8 @@ class _TxtViewer extends FileViewer {
 
   @override
   Widget viewDocument(BuildContext context, Document doc,
-      {bool invert = false, int defaultPage = 0}) {
+      {bool invert = false, int? defaultPage, void Function()? onTap}) {
+    this.invert = invert;
     Widget Function(
             Document doc, BuildContext context, AsyncSnapshot<String> snapshot)
         builder;
@@ -52,7 +54,7 @@ class _TxtViewer extends FileViewer {
     debugPrint("${doc.programmingLang} is the language.");
     return Container(
       margin: EdgeInsets.fromLTRB(
-          15, MediaQuery.of(context).padding.top + kToolbarHeight + 0, 15, 0),
+          15, MediaQuery.of(context).padding.top + kToolbarHeight - 15, 15, 0),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: HighlightView(
@@ -67,16 +69,19 @@ class _TxtViewer extends FileViewer {
       Document doc, BuildContext context, AsyncSnapshot<String> snapshot) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: saturate(Theme.of(context).scaffoldBackgroundColor, 10),
+      color: invert == true ? Colors.black : Colors.white,
       padding: EdgeInsets.fromLTRB(
-          15, kToolbarHeight - MediaQuery.of(context).padding.top, 0, 15),
+          15, MediaQuery.of(context).padding.top + kToolbarHeight, 0, 15),
       child: SelectableText(
         snapshot.data ?? "Loading..",
         toolbarOptions: const ToolbarOptions(),
         textAlign: TextAlign.justify,
-        style: GoogleFonts.notoSansGeorgian(color: Colors.white, fontSize: 30),
+        style: GoogleFonts.notoSansGeorgian(
+          color: invert == true ? Colors.white : Colors.black,
+          fontSize: 30,
+        ),
         onSelectionChanged: (selection, cause) =>
-            ContributionPoints.textSelectionChanged(
+            Occurance.textSelectionChanged(
           context,
           TextSelectionChange(
             text: snapshot.data!.substring(selection.start, selection.end),

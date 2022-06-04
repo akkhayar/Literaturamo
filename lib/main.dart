@@ -3,6 +3,7 @@ import 'package:literaturamo/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:literaturamo/utils/tasks.dart' as tasks;
+import 'package:flutter/services.dart';
 
 void main() async {
   await tasks.setup();
@@ -14,6 +15,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = LibThemes.basicDark;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: theme.appBarTheme.backgroundColor),
+    );
     return MaterialApp(
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -21,7 +26,7 @@ class App extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       title: appTitle,
-      theme: LibThemes.basicDark,
+      theme: theme,
       home: const HomeScreen(),
     );
   }

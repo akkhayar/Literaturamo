@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/rendering.dart';
 import 'package:literaturamo/screens/discover.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:literaturamo/screens/library.dart';
 import 'package:literaturamo/screens/recents.dart';
@@ -10,7 +11,6 @@ import 'package:literaturamo/utils/constants.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/screens/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:literaturamo/widgets/document.dart';
 import 'package:collection/collection.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,14 +23,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Box<Document> recentDocuments;
   Document? lastOpened;
-  int currentIndex = 0;
+  late int currentPageIndex;
   late PageController pageController;
 
   @override
   void initState() {
     super.initState();
+    currentPageIndex = SettingBox.get(SettingBoxOptions.defaultPageIndex) ?? 0;
     recentDocuments = Hive.box<Document>(recentDocsBoxName);
-    pageController = PageController();
+    pageController = PageController(initialPage: currentPageIndex);
   }
 
   @override
@@ -40,7 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: _appBar(),
       body: PageView(
         controller: pageController,
-        onPageChanged: (idx) => setState(() => currentIndex = idx),
+        onPageChanged: (idx) {
+          setState(() => currentPageIndex = idx);
+          debugPrint("Setting default page to $idx");
+          Hive.box(settingsBoxName)
+              .put(SettingBoxOptions.defaultPageIndex, idx);
+        },
         scrollDirection: Axis.horizontal,
         children: const [RecentScreen(), LibraryScreen(), DiscoverScreen()],
       ),
@@ -62,18 +68,28 @@ class _HomeScreenState extends State<HomeScreen> {
               dialogTitle: "Open a Document",
               type: FileType.custom,
               allowedExtensions: ["pdf", "txt"],
+              allowMultiple: false,
             );
             if (picked == null ||
                 picked.files.isEmpty ||
                 picked.files[0].extension == null ||
                 picked.files[0].path == null) return;
             final file = picked.files[0];
+
             final preExisting = recentDocuments.values
                 .firstWhereOrNull((element) => element.uri == file.path!);
+
+            final document = await ContributionPoints.getDocumentRegister(
+                    picked.files[0].extension!)!
+                .getDocument(picked.files[0]);
+            if (preExisting != null) {
+              recentDocuments.put(
+                recentDocuments.values.toList().indexOf(preExisting),
+                document,
+              );
+            }
             _openDocument(
-              preExisting ??
-                  Document(file.name, DateTime.now().toIso8601String(), 23,
-                      DocumentType.from(file.extension!), file.path!),
+              document,
               fromRecentDocs: preExisting != null,
             );
           },
@@ -114,9 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _bottomNavBar() {
     return BottomNavigationBar(
-      currentIndex: currentIndex,
+      currentIndex: currentPageIndex,
       onTap: (idx) {
-        currentIndex = idx;
+        currentPageIndex = idx;
         pageController.animateToPage(
           idx,
           duration: const Duration(milliseconds: 500),

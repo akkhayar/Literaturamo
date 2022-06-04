@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:literaturamo/models/document.dart';
-import 'package:timeago/timeago.dart';
 
 class RecentDocumentListTile extends StatelessWidget {
   final Document document;
@@ -30,19 +29,12 @@ class RecentDocumentListTile extends StatelessWidget {
       formatStr = "yyyy-MM-dd – kk:mm";
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).dialogBackgroundColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      margin: const EdgeInsets.symmetric(
-        horizontal: 18,
-        vertical: 10,
-      ),
+    return Card(
+      color: Theme.of(context).dialogBackgroundColor,
       child: ListTile(
         onTap: () => onTap(document),
         title: Text(
-          document.title,
+          document.title.trim(),
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.subtitle1,
         ),

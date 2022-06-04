@@ -31,4 +31,5 @@ Future<void> _registerAdapters() async {
   Hive.registerAdapter(DocumentAdapter());
   Hive.registerAdapter(DocumentTypeAdapter());
   await Hive.openBox<Document>(recentDocsBoxName);
+  await Hive.openBox(settingsBoxName);
 }

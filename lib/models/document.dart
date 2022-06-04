@@ -17,9 +17,9 @@ enum DocumentType {
 
   factory DocumentType.from(String code) {
     final DocumentType type;
-    if (code == pdf.code) {
+    if (code == pdf.extension) {
       type = pdf;
-    } else if (code == epub.code) {
+    } else if (code == epub.extension) {
       type = epub;
     } else {
       type = txt;
@@ -27,14 +27,14 @@ enum DocumentType {
     return type;
   }
 
-  final String code;
-  const DocumentType(this.code);
+  final String extension;
+  const DocumentType(this.extension);
 }
 
 /// A representation model of any potentially readable document of a specified
 /// [DocumentType].
 @HiveType(typeId: docHiveTypeId)
-class Document {
+class Document extends HiveObject {
   @HiveField(0)
   final String title;
   @HiveField(1)
@@ -47,6 +47,8 @@ class Document {
   final String uri;
   @HiveField(5)
   final String? programmingLang;
+  @HiveField(6)
+  int? lastReadPageNo;
 
   Future<String>? data;
 

@@ -27,10 +27,10 @@ class _TranscriptViewer extends FileViewer {
 
   @override
   Widget viewDocument(BuildContext context, Document doc,
-      {bool invert = false, int defaultPage = 0}) {
+      {bool invert = false, int? defaultPage, void Function()? onTap}) {
     return ListView.builder(
       itemBuilder: (context, int no) {
-        final data = txtParser.parse(doc, defaultPage + no);
+        final data = txtParser.parse(doc, defaultPage ?? 0 + no);
         final document = doc.withData(data);
         txtViewer.load(document);
         return Container(

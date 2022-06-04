@@ -3,8 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 const String appTitle = "Literaturamo";
 const String recentDocsBoxName = "recent50docs";
+const String settingsBoxName = "settings";
 const int docHiveTypeId = 0;
 const int docTypeHiveTypeId = 1;
+
+class SettingBoxOptions {
+  SettingBoxOptions._();
+
+  static const defaultPageIndex = "defaultPageIndex";
+  static const defaultFileViewerInversion = "defaultFileViewerInversion";
+}
 
 Color saturate(Color original, int amount) {
   final copy = original;

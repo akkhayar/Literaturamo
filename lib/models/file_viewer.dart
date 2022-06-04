@@ -20,7 +20,7 @@ abstract class FileViewer {
       {this.secondaryActions = const [], required this.supportedDocType});
 
   Widget viewDocument(BuildContext context, Document document,
-      {bool invert = false, int defaultPage = 0});
+      {bool invert = false, int? defaultPage, void Function()? onTap});
 
   void load(Document document) {}
 }

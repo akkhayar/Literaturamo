@@ -23,13 +23,13 @@ class DocumentAdapter extends TypeAdapter<Document> {
       fields[3] as DocumentType,
       fields[4] as String,
       programmingLang: fields[5] as String?,
-    );
+    )..lastReadPageNo = fields[6] as int?;
   }
 
   @override
   void write(BinaryWriter writer, Document obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -41,7 +41,9 @@ class DocumentAdapter extends TypeAdapter<Document> {
       ..writeByte(4)
       ..write(obj.uri)
       ..writeByte(5)
-      ..write(obj.programmingLang);
+      ..write(obj.programmingLang)
+      ..writeByte(6)
+      ..write(obj.lastReadPageNo);
   }
 
   @override
