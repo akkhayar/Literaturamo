@@ -15,13 +15,16 @@ class EnglishLanguageDictionary implements LanguageDictionary {
   Language language = Language.english;
 
   @override
-  Future<DictionaryEntry?> getDictionaryEntry(String word) async {
-    if (word.length < 3 || word.contains(" ")) return null;
-    word = word.toLowerCase().trim();
+  Future<DictionaryEntry> getDictionaryEntry(String word) async {
     final endpoint = Uri.parse("$api/${language.code}/$word");
-    final res = await http.get(endpoint);
+    late final http.Response res;
+    try {
+      res = await http.get(endpoint);
+    } catch (e) {
+      return DictionaryEntry.invalid;
+    }
     if (res.statusCode != 200) {
-      return null;
+      return DictionaryEntry.invalid;
     }
     final resp = jsonDecode(res.body);
     return DictionaryEntry.fromJson(word, language, resp[0]);

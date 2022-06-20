@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:collection/collection.dart';
 
 const String appTitle = "Literaturamo";
 const String recentDocsBoxName = "recent50docs";
@@ -13,6 +14,11 @@ class SettingBoxOptions {
   static const defaultPageIndex = "defaultPageIndex";
   static const defaultFileViewerInversion = "defaultFileViewerInversion";
 }
+
+final supportedLocals = {
+  Locale(Language.english.code),
+  Locale(Language.myanmar.code)
+};
 
 Color saturate(Color original, int amount) {
   final copy = original;
@@ -48,6 +54,8 @@ class LibThemes {
   static ThemeData _makeTheme({
     required Color accentColor,
     required Color onAccent,
+    required Color primaryColor,
+    required Color onPrimary,
     required Color backgroundColor,
     required Color onBackground,
     required Color lightBackgroundColor,
@@ -91,8 +99,8 @@ class LibThemes {
       ),
       colorScheme: ColorScheme(
         brightness: Brightness.light,
-        primary: backgroundColor,
-        onPrimary: onBackground,
+        primary: primaryColor,
+        onPrimary: onPrimary,
         secondary: accentColor,
         onSecondary: onAccent,
         error: Colors.red,
@@ -127,6 +135,8 @@ class LibThemes {
   static final basicDark = _makeTheme(
     accentColor: LibColors.peach,
     onAccent: Colors.white,
+    primaryColor: Colors.blue,
+    onPrimary: Colors.black,
     backgroundColor: LibColors.hagueBlue,
     onBackground: Colors.white,
     lightBackgroundColor: const Color(0xFF262a2C),
@@ -176,6 +186,115 @@ class LibThemes {
   //   ),
   // );
 }
+
+const LANG_CODE2EMOJIS = {
+  "af": "🇿🇦",
+  "sq": "🇦🇱",
+  "am": "🇪🇹",
+  "ar": "🇸🇦",
+  "hy": "🇦🇲",
+  "az": "🇦🇿",
+  "eu": "🇪🇸",
+  "be": "🇵🇱",
+  "bn": "🇧🇩",
+  "bs": "🇧🇦",
+  "bg": "🇧🇬",
+  "ca": "🇪🇸",
+  "ceb": "🇵🇭",
+  "ny": "🇲🇼",
+  "zh-cn": "🇨🇳",
+  "zh-tw": "🇨🇳",
+  "co": "🇫🇷",
+  "hr": "🇭🇷",
+  "cs": "🇨🇿",
+  "da": "🇩🇰",
+  "nl": "🇳🇱",
+  "en": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+  "eo": "🇬🇧",
+  "et": "🇪🇪",
+  "tl": "🇵🇭",
+  "fi": "🇫🇮",
+  "fr": "🇫🇷",
+  "fy": "🇳🇱",
+  "gl": "🇪🇸",
+  "ka": "🇬🇪",
+  "de": "🇩🇪",
+  "el": "🇬🇷",
+  "gu": "🇮🇳",
+  "ht": "🇭🇹",
+  "ha": "🇨🇫",
+  "haw": "🇺🇸",
+  "iw": "🇮🇱",
+  "he": "🇮🇱",
+  "hi": "🇮🇳",
+  "hmn": "🇱🇦",
+  "hu": "🇭🇺",
+  "is": "🇮🇸",
+  "ig": "🇳🇬",
+  "id": "🇮🇩",
+  "ga": "🇮🇪",
+  "it": "🇮🇹",
+  "ja": "🇯🇵",
+  "jw": "🇮🇩",
+  "kn": "🇮🇳",
+  "kk": "🇰🇿",
+  "km": "🇰🇭",
+  "ko": "🇰🇷",
+  "ku": "🇹🇷",
+  "ky": "🇰🇬",
+  "lo": "🇱🇦",
+  "la": "🇵🇹",
+  "lv": "🇱🇻",
+  "lt": "🇱🇹",
+  "lb": "🇩🇪",
+  "mk": "🇲🇰",
+  "mg": "🇲🇬",
+  "ms": "🇲🇾",
+  "ml": "🇮🇳",
+  "mt": "🇲🇹",
+  "mi": "🇳🇿",
+  "mr": "🇮🇳",
+  "mn": "🇲🇳",
+  "my": "🇲🇲",
+  "ne": "🇳🇵",
+  "no": "🇳🇴",
+  "or": "🇮🇳",
+  "ps": "🇦🇫",
+  "fa": "🇮🇷",
+  "pl": "🇵🇱",
+  "pt": "🇵🇹",
+  "pa": "🇮🇳",
+  "ro": "🇷🇴",
+  "ru": "🇷🇺",
+  "sm": "🇦🇸",
+  "gd": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+  "sr": "🇷🇸",
+  "st": "🇱🇸",
+  "sn": "🇿🇼",
+  "sd": "🇵🇰",
+  "si": "🇱🇰",
+  "sk": "🇸🇰",
+  "sl": "🇦🇹",
+  "so": "🇸🇴",
+  "es": "🇪🇸",
+  "su": "🇸🇩",
+  "sw": "🇺🇬",
+  "sv": "🇸🇪",
+  "tg": "🇹🇯",
+  "ta": "🇮🇳",
+  "te": "🇮🇳",
+  "th": "🇹🇭",
+  "tr": "🇹🇷",
+  "uk": "🇺🇦",
+  "ug": "🇵🇰",
+  "uz": "🇺🇿",
+  "vi": "🇻🇳",
+  "cy": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+  "xh": "🇿🇦",
+  "yi": "🇮🇱",
+  "yo": "🇳🇬",
+  "zu": "🇿🇦",
+};
 
 enum Language {
   afrikaans("af"),
@@ -287,5 +406,13 @@ enum Language {
   zulu("zu");
 
   final String code;
+  String? get emoji {
+    return LANG_CODE2EMOJIS[code];
+  }
+
+  static Language? fromCode(String code) {
+    return Language.values.firstWhereOrNull((element) => element.code == code);
+  }
+
   const Language(this.code);
 }

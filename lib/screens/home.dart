@@ -1,8 +1,7 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/rendering.dart';
 import 'package:literaturamo/screens/discover.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:literaturamo/screens/library.dart';
 import 'package:literaturamo/screens/recents.dart';
 import 'package:literaturamo/screens/viewer.dart';
@@ -12,6 +11,7 @@ import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:literaturamo/widgets/lang_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -94,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
+        const LanguagePicker(),
         IconButton(
           icon: const Icon(Icons.settings_rounded),
           tooltip: "Settings",
@@ -140,18 +141,18 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
       type: BottomNavigationBarType.fixed,
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.account_balance_rounded),
-          label: "Recent",
+          icon: const Icon(Icons.account_balance_rounded),
+          label: AppLocalizations.of(context)!.recent,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.import_contacts_rounded),
-          label: "Library",
+          icon: const Icon(Icons.import_contacts_rounded),
+          label: AppLocalizations.of(context)!.library,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.explore_rounded),
-          label: "Discover",
+          icon: const Icon(Icons.explore_rounded),
+          label: AppLocalizations.of(context)!.discover,
         ),
       ],
     );

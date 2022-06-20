@@ -28,13 +28,16 @@ class _TranscriptViewer extends FileViewer {
   @override
   Widget viewDocument(BuildContext context, Document doc,
       {bool invert = false, int? defaultPage, void Function()? onTap}) {
-    return ListView.builder(
+    debugPrint("Transcribing print as ${doc.title}");
+    return PageView.builder(
       itemBuilder: (context, int no) {
-        final data = txtParser.parse(doc, defaultPage ?? 0 + no);
-        final document = doc.withData(data);
+        final document =
+            doc.withData(txtParser.parse(doc, (defaultPage ?? 0) + no + 1));
         txtViewer.load(document);
         return Container(
-            color: Colors.white,
+            width: MediaQuery.of(context).size.width,
+            color: invert ? Colors.black : Colors.white,
+            padding: const EdgeInsets.fromLTRB(100, 0, 150, 50),
             child: txtViewer.viewDocument(context, document, invert: invert));
       },
       itemCount: doc.totalPageNum,

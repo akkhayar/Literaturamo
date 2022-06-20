@@ -1,7 +1,96 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:literaturamo/models/dictionary.dart';
 import 'package:flutter/material.dart';
+import 'package:literaturamo/utils/api.dart';
 import 'package:literaturamo/utils/constants.dart';
+
+class DictionaryDialog extends StatefulWidget {
+  final Language language;
+  final Widget onCouldNotFind;
+  final Widget onSearching;
+  const DictionaryDialog({
+    Key? key,
+    required this.language,
+    required this.onSearching,
+    required this.onCouldNotFind,
+  }) : super(key: key);
+
+  @override
+  State<DictionaryDialog> createState() => _DictionaryDialogState();
+}
+
+class _DictionaryDialogState extends State<DictionaryDialog> {
+  Future<DictionaryEntry?>? definition;
+  late final LanguageDictionary dictionary;
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    dictionary = ContributionPoints.getLanguageDictionary(widget.language)!;
+  }
+
+  void _setDefinition(String query) {
+    if (query.length < 3 || query.contains(" ")) return;
+    query = query.toLowerCase().trim();
+
+    setState(() {
+      definition = dictionary.getDictionaryEntry(query);
+    });
+    _controller.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      title: Text(
+        "English Dictionary",
+        textAlign: TextAlign.center,
+        style: Theme.of(context).appBarTheme.titleTextStyle,
+      ),
+      titlePadding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+      alignment: Alignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.fromLTRB(12, 19, 12, 0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(3),
+          ),
+          child: TextField(
+            textInputAction: TextInputAction.search,
+            onSubmitted: _setDefinition,
+            controller: _controller,
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                onPressed: () => _setDefinition(_controller.text),
+                icon: const Icon(Icons.search_rounded),
+              ),
+              hintText: "Word..",
+            ),
+            autocorrect: true,
+          ),
+        ),
+        if (definition != null)
+          FutureBuilder(
+            future: definition,
+            builder: (context, AsyncSnapshot<DictionaryEntry?> snapshot) {
+              debugPrint("Testing snapshot data ${snapshot.data}");
+              if (snapshot.hasData) {
+                definition = null;
+                if (snapshot.data!.isValid) {
+                  return DefinitionWidget(entry: snapshot.data!);
+                } else {
+                  return widget.onCouldNotFind;
+                }
+              } else {
+                return widget.onSearching;
+              }
+            },
+          )
+      ],
+    );
+  }
+}
 
 class DefinitionWidget extends StatelessWidget {
   final DictionaryEntry entry;

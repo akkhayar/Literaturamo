@@ -1,1 +1,22 @@
-{}
+{
+    "language": "English",
+    "@language": {
+        "description": "The current language"
+    },
+    "recent": "Recent",
+    "@recent": {
+        "description": "A page category"
+    },
+    "library": "Library",
+    "@library": {
+        "description": "A page category"
+    },
+    "discover": "Discover",
+    "@discover": {
+        "description": "A page category"
+    },
+    "recentlyOpened": "Recently Opened",
+    "@recentlyOpened": {
+        "description": "A text"
+    }
+}

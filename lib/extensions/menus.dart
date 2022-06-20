@@ -1,6 +1,6 @@
 import 'package:literaturamo/models/menus.dart';
 import 'package:literaturamo/models/dictionary.dart';
-import 'package:literaturamo/widgets/definition.dart';
+import 'package:literaturamo/widgets/dictionary.dart';
 import 'package:literaturamo/utils/constants.dart';
 import 'package:literaturamo/utils/api.dart';
 import 'package:flutter/material.dart';

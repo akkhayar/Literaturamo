@@ -26,12 +26,22 @@ class DictionaryEntry {
   final List<PhoneticRecord> phonetics;
   final List<WordMeaning> meanings;
 
+  bool _isValid = true;
+
   DictionaryEntry(
       {required this.language,
       required this.query,
       required this.phonetics,
       this.origin,
       required this.meanings});
+
+  static final invalid = DictionaryEntry(
+      language: Language.english, query: "", phonetics: [], meanings: [])
+    .._isValid = false;
+
+  get isValid {
+    return _isValid;
+  }
 
   factory DictionaryEntry.fromJson(
       String word, Language lang, Map<String, dynamic> json) {

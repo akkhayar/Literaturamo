@@ -53,6 +53,7 @@ dependencies:
   fuzzy: ^0.3.0
   timeago: ^3.2.2
   pdfx: ^2.0.1+2
+  provider: ^6.0.3
 
 dev_dependencies:
   hive_generator: ^1.1.3

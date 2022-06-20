@@ -29,25 +29,28 @@ class RecentDocumentListTile extends StatelessWidget {
       formatStr = "yyyy-MM-dd – kk:mm";
     }
 
-    return Card(
-      color: Theme.of(context).dialogBackgroundColor,
-      child: ListTile(
-        onTap: () => onTap(document),
-        title: Text(
-          document.title.trim(),
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.subtitle1,
-        ),
-        leading: Icon(
-          Icons.book_online_rounded,
-          color: Theme.of(context).iconTheme.color,
-        ),
-        subtitle: Text(
-          "${document.totalPageNum} Pages",
-          style: Theme.of(context).textTheme.subtitle2,
-        ),
-        trailing: Text(
-          "$leading ${DateFormat(formatStr).format(openedAt)}",
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Card(
+        color: Theme.of(context).dialogBackgroundColor,
+        child: ListTile(
+          onTap: () => onTap(document),
+          title: Text(
+            document.title.trim(),
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+          leading: Icon(
+            Icons.book_online_rounded,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          subtitle: Text(
+            "${document.totalPageNum} Pages",
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+          trailing: Text(
+            "$leading ${DateFormat(formatStr).format(openedAt)}",
+          ),
         ),
       ),
     );

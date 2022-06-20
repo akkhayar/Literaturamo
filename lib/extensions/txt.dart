@@ -68,17 +68,15 @@ class _TxtViewer extends FileViewer {
   Widget _documentWidget(
       Document doc, BuildContext context, AsyncSnapshot<String> snapshot) {
     return Container(
-      width: MediaQuery.of(context).size.width,
       color: invert == true ? Colors.black : Colors.white,
       padding: EdgeInsets.fromLTRB(
           15, MediaQuery.of(context).padding.top + kToolbarHeight, 0, 15),
       child: SelectableText(
         snapshot.data ?? "Loading..",
         toolbarOptions: const ToolbarOptions(),
-        textAlign: TextAlign.justify,
         style: GoogleFonts.notoSansGeorgian(
           color: invert == true ? Colors.white : Colors.black,
-          fontSize: 30,
+          fontSize: 20,
         ),
         onSelectionChanged: (selection, cause) =>
             Occurance.textSelectionChanged(

@@ -5,7 +5,7 @@ import 'package:literaturamo/models/file_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:literaturamo/utils/api.dart';
 import 'package:literaturamo/utils/constants.dart';
-import 'package:literaturamo/widgets/definition.dart';
+import 'package:literaturamo/widgets/dictionary.dart';
 
 class ViewerScreen extends StatefulWidget {
   final Document document;
@@ -32,7 +32,8 @@ class _ViewerScreenState extends State<ViewerScreen> {
     fileViewer = widget.fileViewer ??
         ContributionPoints.getFileViewer(widget.document.type);
     fileViewer.load(widget.document);
-    invert = SettingBox.get(SettingBoxOptions.defaultFileViewerInversion);
+    invert =
+        SettingBox.get(SettingBoxOptions.defaultFileViewerInversion) ?? false;
     hasTxtParser =
         ContributionPoints.getTextParser(fileViewer.supportedDocType) != null;
 
@@ -42,6 +43,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: inspect
@@ -132,8 +134,6 @@ class _ViewerScreenState extends State<ViewerScreen> {
     setState(() => invert = !invert);
   }
 
-  final TextEditingController _controller = TextEditingController();
-
   BottomAppBar? _bottomAppBar() => inspect && fileViewer.controller != null
       ? BottomAppBar(
           color: Theme.of(context).appBarTheme.backgroundColor,
@@ -155,87 +155,29 @@ class _ViewerScreenState extends State<ViewerScreen> {
 
   void _displayDictionary() {
     // ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0)
-    Future<DictionaryEntry?>? definition;
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return SimpleDialog(
-              alignment: Alignment.center,
-              insetPadding: const EdgeInsets.fromLTRB(25, 250, 25, 250),
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 9),
-                  child: Text(
-                    "English Dictionary",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).appBarTheme.titleTextStyle,
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(17, 19, 17, 0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: TextField(
-                    textInputAction: TextInputAction.search,
-                    onSubmitted: (text) {
-                      setState(() {
-                        definition = ContributionPoints.getLanguageDictionary(
-                                Language.english)!
-                            .getDictionaryEntry(text);
-                      });
-                      _controller.clear();
-                    },
-                    controller: _controller,
-                    decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              definition =
-                                  ContributionPoints.getLanguageDictionary(
-                                          Language.english)!
-                                      .getDictionaryEntry(_controller.text);
-                            });
-                            _controller.clear();
-                          },
-                          icon: const Icon(Icons.search_rounded),
-                        ),
-                        filled: true,
-                        hintText: "Word..",
-                        fillColor: Theme.of(context)
-                            .navigationBarTheme
-                            .backgroundColor),
-                    autocorrect: true,
-                  ),
-                ),
-                if (definition != null)
-                  FutureBuilder(
-                    future: definition,
-                    builder:
-                        (context, AsyncSnapshot<DictionaryEntry?> snapshot) {
-                      if (snapshot.hasData) {
-                        definition = null;
-                        if (snapshot.data != null) {
-                          return DefinitionWidget(entry: snapshot.data!);
-                        } else {
-                          return const Text(
-                            "Could not find",
-                            textAlign: TextAlign.center,
-                          );
-                        }
-                      } else {
-                        return const Text(
-                          "Searching..",
-                          textAlign: TextAlign.center,
-                        );
-                      }
-                    },
-                  )
-              ],
-            );
-          },
+      barrierLabel: "FileViewer",
+      barrierDismissible: true,
+      transitionDuration: const Duration(milliseconds: 255),
+      pageBuilder: (context, anim1, anim2) {
+        return const DictionaryDialog(
+          language: Language.english,
+          onSearching: Text(
+            "Searching..",
+            textAlign: TextAlign.center,
+          ),
+          onCouldNotFind: Text(
+            "Could not find..",
+            textAlign: TextAlign.center,
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position: Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
+              .animate(anim1),
+          child: child,
         );
       },
     );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/screens/viewer.dart';
 import 'package:literaturamo/utils/constants.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 import 'package:literaturamo/widgets/document.dart';
 
@@ -20,10 +21,10 @@ class _RecentScreenState extends State<RecentScreen> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.fromLTRB(15, 10, 15, 3),
           alignment: Alignment.topLeft,
           child: Text(
-            "Recently Opened",
+            AppLocalizations.of(context)!.recentlyOpened,
             style: GoogleFonts.playfairDisplay(
               fontSize: 20,
             ),
