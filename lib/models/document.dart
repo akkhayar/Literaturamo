@@ -49,6 +49,8 @@ class Document extends HiveObject {
   final String? programmingLang;
   @HiveField(6)
   int? lastReadPageNo;
+  @HiveField(7)
+  final String? authorName;
 
   Future<String>? data;
 
@@ -56,17 +58,18 @@ class Document extends HiveObject {
     return uri.startsWith("http://") || uri.startsWith("https://");
   }
 
-  Document(this.title, this.date, this.totalPageNum, this.type, this.uri,
+  Document(this.title, this.authorName, this.date, this.totalPageNum, this.type,
+      this.uri,
       {this.programmingLang});
 
   Document withData(Future<String> data) {
-    return Document(title, date, totalPageNum, type, uri,
+    return Document(title, authorName, date, totalPageNum, type, uri,
         programmingLang: programmingLang)
       ..data = data;
   }
 
   Document withType(DocumentType type) {
-    return Document(title, date, totalPageNum, type, uri,
+    return Document(title, authorName, date, totalPageNum, type, uri,
         programmingLang: programmingLang);
   }
 

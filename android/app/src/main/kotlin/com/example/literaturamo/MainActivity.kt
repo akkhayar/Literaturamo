@@ -1,4 +1,4 @@
-package com.example.Literaturamo
+package com.example.literaturamo
 
 import io.flutter.embedding.android.FlutterActivity
 

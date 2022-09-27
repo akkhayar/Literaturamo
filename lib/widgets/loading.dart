@@ -15,7 +15,7 @@ class Silhouette extends StatelessWidget {
       width: width,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: saturate(Theme.of(context).textTheme.subtitle1!.color!, -10),
+        color: saturate(Theme.of(context).textTheme.titleMedium!.color!, -10),
         borderRadius: const BorderRadius.all(Radius.circular(16)),
       ),
     );

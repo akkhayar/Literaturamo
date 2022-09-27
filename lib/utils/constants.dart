@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
 
+/// Application Title for internal use
 const String appTitle = "Literaturamo";
+
+// Hive and HiveBox CONSTANTS
 const String recentDocsBoxName = "recent50docs";
 const String settingsBoxName = "settings";
 const int docHiveTypeId = 0;
@@ -19,6 +22,15 @@ final supportedLocals = {
   Locale(Language.english.code),
   Locale(Language.myanmar.code)
 };
+
+// A constant global discord rich presence object
+// late final DiscordRPC discordRPC;
+
+double widthPercent(BuildContext ctx, int percent) =>
+    MediaQuery.of(ctx).size.width * (percent / 100);
+
+double heightPercent(BuildContext ctx, int percent) =>
+    MediaQuery.of(ctx).size.height * (percent / 100);
 
 Color saturate(Color original, int amount) {
   final copy = original;
@@ -63,9 +75,9 @@ class LibThemes {
     required Color lightestBackgroundColor,
     required Color onLightestBackground,
     required Color lighterBackgroundColor,
-    required TextStyle subtitle1,
-    required TextStyle subtitle2,
-    required TextStyle bodyText2,
+    required TextStyle titleMedium,
+    required TextStyle titleSmall,
+    required TextStyle bodyMedium,
   }) {
     return ThemeData(
       appBarTheme: AppBarTheme(
@@ -125,9 +137,9 @@ class LibThemes {
       scaffoldBackgroundColor: backgroundColor,
       iconTheme: IconThemeData(color: accentColor),
       textTheme: TextTheme(
-        bodyText2: bodyText2,
-        subtitle1: subtitle1,
-        subtitle2: subtitle2,
+        bodyMedium: bodyMedium,
+        titleMedium: titleMedium,
+        titleSmall: titleSmall,
       ),
     );
   }
@@ -144,11 +156,11 @@ class LibThemes {
     onLighterBackground: Colors.white,
     lightestBackgroundColor: const Color(0xFF35393B),
     onLightestBackground: Colors.white,
-    bodyText2: GoogleFonts.playfairDisplay(
+    bodyMedium: GoogleFonts.playfairDisplay(
       color: Colors.white,
     ),
-    subtitle1: GoogleFonts.playfairDisplay(color: Colors.white),
-    subtitle2: GoogleFonts.playfairDisplay(color: Colors.grey),
+    titleMedium: GoogleFonts.playfairDisplay(color: Colors.white),
+    titleSmall: GoogleFonts.playfairDisplay(color: Colors.grey),
   );
 
   // static final solarizedDark = _makeTheme(
@@ -175,13 +187,13 @@ class LibThemes {
   //   backgroundColor: LibColors.solarizedBlue,
   //   primaryColor: LibColors.solarizedLightBlue,
   //   iconColor: LibColors.waterBlue,
-  //   bodyText2: GoogleFonts.playfairDisplay(
+  //   bodyMedium: GoogleFonts.playfairDisplay(
   //     color: Colors.white,
   //   ),
-  //   subtitle1: GoogleFonts.playfairDisplay(
+  //   titleMedium: GoogleFonts.playfairDisplay(
   //     color: Colors.white,
   //   ),
-  //   subtitle2: GoogleFonts.playfairDisplay(
+  //   titleSmall: GoogleFonts.playfairDisplay(
   //     color: Colors.grey,
   //   ),
   // );
@@ -415,4 +427,11 @@ enum Language {
   }
 
   const Language(this.code);
+}
+
+class LabelledIcon {
+  final String label;
+  final Icon icon;
+
+  LabelledIcon({required this.label, required this.icon});
 }

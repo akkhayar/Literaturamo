@@ -1,5 +1,5 @@
 name: literaturamo
-description: A satiate document reader.
+description: A satiating document reader.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -37,23 +37,27 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   google_fonts: ^3.0.0
-  pdf_text: ^0.5.0
+
   http: ^0.13.4
   animations: ^2.0.3
-  flutter_cached_pdfview: ^0.4.1
-  flutter_highlight: ^0.7.0
-  intl: ^0.17.0
-  syncfusion_flutter_pdfviewer: ^20.1.58-beta
-  invert_colors: ^0.0.4
   file_picker: ^4.6.0
-  collapsible_sidebar: ^2.0.1+2
+  fuzzy: ^0.3.0
+  provider: ^6.0.3
+
+  # i18n
+  intl: ^0.17.0
+  # database
   hive: ^2.2.1
   hive_flutter: ^1.1.0
-  shimmer: ^2.0.0
-  fuzzy: ^0.3.0
-  timeago: ^3.2.2
+
+  # PDF plugin
   pdfx: ^2.0.1+2
-  provider: ^6.0.3
+  flutter_highlight: ^0.7.0
+  syncfusion_flutter_pdfviewer: ^20.2.49-beta
+  invert_colors: ^0.0.4
+  typed_data: ^1.3.1
+  shimmer: ^2.0.0
+  # dart_discord_rpc: ^0.0.2
 
 dev_dependencies:
   hive_generator: ^1.1.3

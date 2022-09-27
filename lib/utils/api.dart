@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:literaturamo/models/menus.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:literaturamo/models/dictionary.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:collection/collection.dart';
@@ -19,19 +19,23 @@ class ContributionPoints {
   static final Map<String, File> _definedWordsAssets = {};
   static final Map<String, FileViewer> _fileViewers = {};
   static final Map<String, TextParser> _textParsers = {};
-  static final List<SelectionContextMenu> _selectionContextMenus = [];
+  static final List<ContextMenu> _selectionContextMenus = [];
   static final Map<String, DocumentRegister> _documentRegisters = {};
 
   static registerLanguageDictionary(LanguageDictionary provider) =>
       _langDictionaries.putIfAbsent(provider.language.code, () => provider);
 
-  static registerFileViewer(FileViewer provider) => _fileViewers.putIfAbsent(
-      provider.supportedDocType.extension, () => provider);
+  static registerFileViewer(DocumentType type, FileViewer provider) => {
+        if (type == provider.supportedDocType)
+          _fileViewers.putIfAbsent(type.extension, () => provider)
+        else
+          throw ("${provider.supportedDocType} does not match $type to register as file viewer.")
+      };
 
   static registerTextParser(TextParser provider) => _textParsers.putIfAbsent(
       provider.supportedType.extension, () => provider);
 
-  static registerSelectionContextMenu(SelectionContextMenu provider) =>
+  static registerSelectionContextMenu(ContextMenu provider) =>
       _selectionContextMenus.add(provider);
 
   static registerDefinedWords(Language language, File asset) =>
@@ -40,8 +44,7 @@ class ContributionPoints {
   static registerDocumentRegister(String ext, DocumentRegister register) =>
       _documentRegisters.putIfAbsent(ext, () => register);
 
-  static List<SelectionContextMenu> getSelectionContextMenus(
-          Language language) =>
+  static List<ContextMenu> getSelectionContextMenus(Language language) =>
       _selectionContextMenus;
 
   static LanguageDictionary? getLanguageDictionary(Language language) =>
@@ -64,16 +67,23 @@ class ContributionPoints {
 }
 
 /// A wrapper around global events that can be invoked and hooked.
-class Occurance {
+class Events {
   static final List<TextSelectionChanged> _textSelectionChangeListeners = [];
   static final List<OverlayEntry> _disposables = [];
   static final List<void Function(int pageNo)> _readNewPageListeners = [];
+  static final List<void Function(Document doc)> _openDocumentListeners = [];
 
   static void onTextSelectionChanged(TextSelectionChanged listener) =>
       _textSelectionChangeListeners.add(listener);
 
+  static void onOpenDocument(void Function(Document doc) listener) =>
+      _openDocumentListeners.add(listener);
+
   static void onReadNewPage(void Function(int pageNo) listener) =>
       _readNewPageListeners.add(listener);
+
+  static void openedDocument(Document doc) =>
+      _openDocumentListeners.map((element) => element(doc)).toList();
 
   static Future<void> readNewPage(String uri, int lastReadPageNo) async {
     final selected = Hive.box<Document>(recentDocsBoxName)
@@ -119,11 +129,11 @@ abstract class DocumentRegister {
   Future<Document> getDocument(PlatformFile file);
 }
 
-abstract class SelectionContextMenu {
+abstract class ContextMenu {
   final String label;
   final Icon icon;
 
-  SelectionContextMenu({required this.label, required this.icon});
+  ContextMenu({required this.label, required this.icon});
 }
 
 class SettingBox {

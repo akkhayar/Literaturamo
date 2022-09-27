@@ -3,9 +3,11 @@ import 'package:literaturamo/models/file_viewer.dart';
 import 'package:literaturamo/models/text_parser.dart';
 import 'package:literaturamo/utils/api.dart';
 import 'package:flutter/material.dart';
+import 'package:literaturamo/utils/constants.dart';
 
 void main() {
-  ContributionPoints.registerFileViewer(_TranscriptViewer());
+  ContributionPoints.registerFileViewer(
+      DocumentType.transcript, _TranscriptViewer());
 }
 
 /// A tarnscript viewer parses a document into text if the document type
@@ -37,7 +39,8 @@ class _TranscriptViewer extends FileViewer {
         return Container(
             width: MediaQuery.of(context).size.width,
             color: invert ? Colors.black : Colors.white,
-            padding: const EdgeInsets.fromLTRB(100, 0, 150, 50),
+            padding: EdgeInsets.fromLTRB(
+                widthPercent(context, 2), 0, widthPercent(context, 2), 10),
             child: txtViewer.viewDocument(context, document, invert: invert));
       },
       itemCount: doc.totalPageNum,

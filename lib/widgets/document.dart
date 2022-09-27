@@ -38,7 +38,7 @@ class RecentDocumentListTile extends StatelessWidget {
           title: Text(
             document.title.trim(),
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           leading: Icon(
             Icons.book_online_rounded,
@@ -46,7 +46,7 @@ class RecentDocumentListTile extends StatelessWidget {
           ),
           subtitle: Text(
             "${document.totalPageNum} Pages",
-            style: Theme.of(context).textTheme.subtitle2,
+            style: Theme.of(context).textTheme.titleSmall,
           ),
           trailing: Text(
             "$leading ${DateFormat(formatStr).format(openedAt)}",

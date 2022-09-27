@@ -6,7 +6,7 @@ import 'package:literaturamo/utils/api.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  Occurance.onTextSelectionChanged(_showDictionaryOverlay);
+  Events.onTextSelectionChanged(_showDictionaryOverlay);
 }
 
 Future<OverlayEntry?> _showDictionaryOverlay(TextSelectionChange change) async {

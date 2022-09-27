@@ -1,5 +1,6 @@
 import 'package:literaturamo/models/document.dart';
 import 'package:flutter/material.dart';
+import 'package:literaturamo/utils/api.dart';
 
 /// An abstract class that identifies a FileViewer.
 ///
@@ -22,7 +23,9 @@ abstract class FileViewer {
   Widget viewDocument(BuildContext context, Document document,
       {bool invert = false, int? defaultPage, void Function()? onTap});
 
-  void load(Document document) {}
+  void load(Document document) {
+    Events.openedDocument(document);
+  }
 }
 
 class FileViewerController {

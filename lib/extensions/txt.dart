@@ -7,10 +7,9 @@ import 'package:literaturamo/utils/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/obsidian.dart';
-import 'package:literaturamo/utils/constants.dart';
 
 void main() {
-  ContributionPoints.registerFileViewer(_TxtViewer());
+  ContributionPoints.registerFileViewer(DocumentType.txt, _TxtViewer());
 }
 
 /// A text viewer loads a text file at a specified destination and
@@ -78,8 +77,7 @@ class _TxtViewer extends FileViewer {
           color: invert == true ? Colors.white : Colors.black,
           fontSize: 20,
         ),
-        onSelectionChanged: (selection, cause) =>
-            Occurance.textSelectionChanged(
+        onSelectionChanged: (selection, cause) => Events.textSelectionChanged(
           context,
           TextSelectionChange(
             text: snapshot.data!.substring(selection.start, selection.end),
@@ -91,6 +89,7 @@ class _TxtViewer extends FileViewer {
         ),
       ),
     );
+
     // SkeletonLoader(
     //   builder: LoadingTextViewer(
     //     width: MediaQuery.of(context).size.width,

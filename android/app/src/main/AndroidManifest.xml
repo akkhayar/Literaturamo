@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.Literaturamo">
+    package="com.example.literaturamo">
    <application
-        android:label="Literaturamo"
+        android:label="literaturamo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

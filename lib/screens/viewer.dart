@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:literaturamo/models/dictionary.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/models/file_viewer.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +35,6 @@ class _ViewerScreenState extends State<ViewerScreen> {
         SettingBox.get(SettingBoxOptions.defaultFileViewerInversion) ?? false;
     hasTxtParser =
         ContributionPoints.getTextParser(fileViewer.supportedDocType) != null;
-
-    // Occurance.onReadNewPage((int _) => setState(() {}));
   }
 
   @override

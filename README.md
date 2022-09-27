@@ -42,10 +42,11 @@ flutter_highlight: ^0.7.0
 
 ## Settings
 
-1. TTS Voice Prototype     
+1. TTS Voice Prototype
 
 TODO:
 1. Different colors for different formats
 2. Better skeleton loading for opening text files
-3. Too intensive textual parsing for
+3. Too intensive textual parsing
 4. Rework dashboard design to be more conformant with modern design philosophies
+
