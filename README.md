@@ -48,5 +48,8 @@ TODO:
 1. Different colors for different formats
 2. Better skeleton loading for opening text files
 3. Too intensive textual parsing
-4. Rework dashboard design to be more conformant with modern design philosophies
 
+
+Currently being worked:
+4. Rework dashboard design to be more conformant with modern design philosophies
+5. Writing capabilities

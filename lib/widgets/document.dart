@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:literaturamo/models/document.dart';
 
+/// A stateless rectangular tile to display a recent document.
 class RecentDocumentListTile extends StatelessWidget {
   final Document document;
   final void Function(Document doc) onTap;
