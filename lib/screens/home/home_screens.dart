@@ -22,10 +22,125 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Box<Document> recentDocuments;
   Document? lastOpened;
+
+  late Box<Document> recentDocuments;
   late int currentPageIndex;
   late PageController pageController;
+
+  static const appBarToolBarHeight = 48.0;
+  static const desktopSidebarWidth = 230.0;
+  static const mobilePageChangeDuration = 500;
+  static const desktopPageChangeDuration = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final subpages = getSubpages(context);
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        toolbarHeight: appBarToolBarHeight, // add this line
+        title: const Text(
+          appTitle,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.note_add_rounded),
+            onPressed: _openNewDocument,
+          ),
+          const LanguagePicker(),
+          IconButton(
+            icon: const Icon(Icons.settings_rounded),
+            tooltip: "Settings",
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SettingScreen(),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Row(
+          children: [
+            if (Responsive.isDesktop(context))
+              SizedBox(
+                width: desktopSidebarWidth,
+                child: Container(
+                  color: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .backgroundColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: subpages
+                        .map(
+                          (e) => TextButton(
+                            onPressed: () => animateToSubPage(
+                                subpages.indexOf(e), desktopPageChangeDuration),
+                            child: Row(
+                              children: [e.icon, Text(e.label)],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+            Expanded(
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (idx) {
+                  setState(() => currentPageIndex = idx);
+                  debugPrint("Setting default page to $idx");
+                  Hive.box(settingsBoxName)
+                      .put(SettingBoxOptions.defaultPageIndex, idx);
+                },
+                scrollDirection: Axis.horizontal,
+                children: const [
+                  RecentScreen(),
+                  LibraryScreen(),
+                  DiscoverScreen()
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Responsive.isMobile(context)
+          ? BottomNavigationBar(
+              currentIndex: currentPageIndex,
+              type: BottomNavigationBarType.fixed,
+              items: getSubpages(context)
+                  .map((e) => BottomNavigationBarItem(
+                        icon: e.icon,
+                        label: e.label,
+                      ))
+                  .toList(),
+              onTap: (idx) => animateToSubPage(idx, mobilePageChangeDuration),
+            )
+          : null,
+      floatingActionButton: !Responsive.isDesktop(context) &&
+              (lastOpened != null || recentDocuments.values.toList().isNotEmpty)
+          ? FloatingActionButton(
+              onPressed: () {
+                if (lastOpened == null) {
+                  final recentDocumentsOrdered =
+                      recentDocuments.values.toList();
+                  recentDocumentsOrdered.sort((a, b) => Document.compare(a, b));
+                  lastOpened = recentDocumentsOrdered.first;
+                }
+                _loadDocument(lastOpened!, fromRecentDocs: true);
+              },
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              child: Icon(
+                Icons.local_library_rounded,
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            )
+          : null,
+    );
+  }
 
   /// An ordered list of labelled icons for available subpages.
   static List<LabelledIcon> getSubpages(BuildContext context) => [
@@ -51,124 +166,12 @@ class _HomeScreenState extends State<HomeScreen> {
     pageController = PageController(initialPage: currentPageIndex);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: _appBar(),
-      body: SafeArea(
-        child: PageView(
-          controller: pageController,
-          onPageChanged: (idx) {
-            setState(() => currentPageIndex = idx);
-            debugPrint("Setting default page to $idx");
-            Hive.box(settingsBoxName)
-                .put(SettingBoxOptions.defaultPageIndex, idx);
-          },
-          scrollDirection: Axis.horizontal,
-          children: const [RecentScreen(), LibraryScreen(), DiscoverScreen()],
-        ),
-      ),
-      bottomNavigationBar: Responsive.isMobile(context)
-          ? BottomNavigationBar(
-              currentIndex: currentPageIndex,
-              type: BottomNavigationBarType.fixed,
-              items: getSubpages(context)
-                  .map((e) => BottomNavigationBarItem(
-                        icon: e.icon,
-                        label: e.label,
-                      ))
-                  .toList(),
-              onTap: (idx) {
-                currentPageIndex = idx;
-                pageController.animateToPage(
-                  idx,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.ease,
-                );
-              },
-            )
-          : null,
-      floatingActionButton: _openRecentDocument(),
-    );
-  }
-
-  Widget _buildAtop() {
-    return Scaffold(
-      body: Row(
-        children: [
-          SizedBox(
-            width: 140,
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: getSubpages(context)
-                    .map(
-                      (e) => TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [e.icon, Text(e.label)],
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color:
-                    Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black,
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                  ),
-                ],
-              ),
-              child: const RecentScreen(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  AppBar _appBar() {
-    final theme = Theme.of(context);
-    return AppBar(
-      title: Text(
-        appTitle,
-        style: theme.appBarTheme.titleTextStyle!.copyWith(
-          color: Responsive.isDesktop(context)
-              ? theme.appBarTheme.backgroundColor
-              : theme.appBarTheme.foregroundColor,
-        ),
-      ),
-      backgroundColor: Responsive.isDesktop(context)
-          ? theme.iconTheme.color
-          : theme.colorScheme.background,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.note_add_rounded),
-          onPressed: _openNewDocument,
-        ),
-        const LanguagePicker(),
-        IconButton(
-          icon: const Icon(Icons.settings_rounded),
-          tooltip: "Settings",
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SettingScreen(),
-            ),
-          ),
-        ),
-      ],
+  void animateToSubPage(int index, int duration) {
+    currentPageIndex = index;
+    pageController.animateToPage(
+      index,
+      duration: Duration(milliseconds: duration),
+      curve: Curves.ease,
     );
   }
 
@@ -181,8 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (picked == null ||
         picked.files.isEmpty ||
-        picked.files[0].extension == null ||
-        picked.files[0].path == null) return;
+        picked.files[0].extension == null) return;
     final file = picked.files[0];
 
     final preExisting = recentDocuments.values
@@ -221,24 +223,5 @@ class _HomeScreenState extends State<HomeScreen> {
         lastOpened = doc;
       });
     }
-  }
-
-  /// Recall the most recently opened document.
-  Widget _openRecentDocument() {
-    return FloatingActionButton(
-      onPressed: () {
-        if (lastOpened == null) {
-          final orderedBox = recentDocuments.values.toList();
-          orderedBox.sort((a, b) => Document.compare(a, b));
-          lastOpened = orderedBox.first;
-        }
-        _loadDocument(lastOpened!, fromRecentDocs: true);
-      },
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      child: Icon(
-        Icons.local_library_rounded,
-        color: Theme.of(context).colorScheme.onSecondary,
-      ),
-    );
   }
 }

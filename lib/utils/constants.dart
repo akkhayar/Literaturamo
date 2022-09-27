@@ -199,7 +199,7 @@ class LibThemes {
   // );
 }
 
-const LANG_CODE2EMOJIS = {
+const langCode2Emojis = {
   "af": "🇿🇦",
   "sq": "🇦🇱",
   "am": "🇪🇹",
@@ -419,7 +419,7 @@ enum Language {
 
   final String code;
   String? get emoji {
-    return LANG_CODE2EMOJIS[code];
+    return langCode2Emojis[code];
   }
 
   static Language? fromCode(String code) {
