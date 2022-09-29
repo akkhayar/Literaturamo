@@ -40,6 +40,11 @@ flutter_highlight: ^0.7.0
 1. Themes
 2. Languages
 
+
+## Web-Compatible sustained file loading and saving
+
+1.
+
 ## Settings
 
 1. TTS Voice Prototype

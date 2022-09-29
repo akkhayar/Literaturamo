@@ -71,19 +71,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Theme.of(context)
                       .bottomNavigationBarTheme
                       .backgroundColor,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: subpages
-                        .map(
-                          (e) => TextButton(
-                            onPressed: () => animateToSubPage(
-                                subpages.indexOf(e), desktopPageChangeDuration),
-                            child: Row(
-                              children: [e.icon, Text(e.label)],
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: subpages
+                          .map(
+                            (e) => TextButton(
+                              onPressed: () => animateToSubPage(
+                                  subpages.indexOf(e),
+                                  desktopPageChangeDuration),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                child: Row(
+                                  children: [
+                                    e.icon,
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                      child: Text(e.label),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                    ),
                   ),
                 ),
               ),
