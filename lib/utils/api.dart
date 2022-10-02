@@ -85,10 +85,12 @@ class Events {
   static void openedDocument(Document doc) =>
       _openDocumentListeners.map((element) => element(doc)).toList();
 
-  static Future<void> readNewPage(String uri, int lastReadPageNo) async {
+  static Future<void> turnedNewPage(
+      String canonicalName, int lastReadPageNo) async {
     final selected = Hive.box<Document>(recentDocsBoxName)
         .values
-        .firstWhereOrNull((element) => element.uri == uri);
+        .firstWhereOrNull(
+            (element) => element.canonicalName() == canonicalName);
 
     if (selected != null) {
       selected.lastReadPageNo = lastReadPageNo;

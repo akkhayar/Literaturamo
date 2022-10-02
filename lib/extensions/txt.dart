@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:literaturamo/models/menus.dart';
 import 'package:literaturamo/models/document.dart';
@@ -26,7 +27,9 @@ class _TxtViewer extends FileViewer {
   @override
   void load(Document document) {
     if (document.data == null) {
-      data = File(document.uri).readAsString();
+      data = kIsWeb
+          ? Future<String>.value(document.uintData.toString())
+          : File(document.uri!).readAsString();
     } else {
       data = document.data;
     }

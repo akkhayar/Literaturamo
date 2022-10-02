@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:literaturamo/utils/constants.dart';
 
@@ -44,7 +45,7 @@ class Document extends HiveObject {
   @HiveField(3)
   final DocumentType type;
   @HiveField(4)
-  final String uri;
+  final String? uri;
   @HiveField(5)
   final String? programmingLang;
   @HiveField(6)
@@ -53,14 +54,17 @@ class Document extends HiveObject {
   final String? authorName;
 
   Future<String>? data;
+  Uint8List? uintData;
 
   bool get isExternal {
-    return uri.startsWith("http://") || uri.startsWith("https://");
+    return kIsWeb
+        ? false
+        : uri!.startsWith("http://") || uri!.startsWith("https://");
   }
 
   Document(this.title, this.authorName, this.date, this.totalPageNum, this.type,
       this.uri,
-      {this.programmingLang});
+      {this.programmingLang, this.uintData});
 
   Document withData(Future<String> data) {
     return Document(title, authorName, date, totalPageNum, type, uri,
@@ -76,6 +80,11 @@ class Document extends HiveObject {
   @override
   String toString() {
     return "<Document $type '$title' ($date) @$uri@>";
+  }
+
+  String canonicalName() {
+    // does not involve the URI to be web compatible
+    return "$type-$title-$date";
   }
 
   static int compare(Document a, Document b) {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/models/file_viewer.dart';
 import 'package:literaturamo/utils/api.dart';
@@ -17,13 +18,16 @@ class PdfxPdfView extends FileViewer {
   Widget viewDocument(BuildContext context, Document document,
       {bool invert = false, int? defaultPage, void Function()? onTap}) {
     this.defaultPage = defaultPage ?? 0;
-    final cont =
-        pdfx.PdfController(document: pdfx.PdfDocument.openAsset(document.uri));
+    final pdfxController = pdfx.PdfController(
+        document: kIsWeb
+            ? pdfx.PdfDocument.openData(document.uintData!)
+            : pdfx.PdfDocument.openAsset(document.uri!));
+
     controller = FileViewerController(
         defaultPage: defaultPage ?? 0,
-        gotoPage: (int pg) => cont.jumpToPage(pg));
+        gotoPage: (int pg) => pdfxController.jumpToPage(pg));
     return pdfx.PdfView(
-      controller: cont,
+      controller: pdfxController,
       onPageChanged: _onPageChanged,
     );
   }
@@ -32,7 +36,7 @@ class PdfxPdfView extends FileViewer {
     debugPrint("Page changed to $page ");
     if (page != null) {
       controller!.currentPage = page;
-      Events.readNewPage(doc!.uri, page);
+      Events.turnedNewPage(doc!.canonicalName(), page);
     }
   }
 }
