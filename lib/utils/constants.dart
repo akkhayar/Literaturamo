@@ -18,6 +18,7 @@ class SettingBoxOptions {
   static const defaultFileViewerInversion = "defaultFileViewerInversion";
 }
 
+const appBarToolBarHeight = 48.0;
 final supportedLocals = {
   Locale(Language.english.code),
   Locale(Language.myanmar.code)
@@ -431,7 +432,7 @@ enum Language {
 
 class LabelledIcon {
   final String label;
-  final Icon icon;
+  final IconData iconData;
 
-  LabelledIcon({required this.label, required this.icon});
+  LabelledIcon({required this.label, required this.iconData});
 }

@@ -1,8 +1,10 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:literaturamo/responsive.dart';
+import 'package:literaturamo/utils/responsive.dart';
 import 'package:literaturamo/screens/discover.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:literaturamo/screens/editor/editor_screen.dart';
+import 'package:literaturamo/screens/home/components/sidebar.dart';
 import 'package:literaturamo/screens/library.dart';
 import 'package:literaturamo/screens/recents.dart';
 import 'package:literaturamo/screens/viewer.dart';
@@ -28,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late int currentPageIndex;
   late PageController pageController;
 
-  static const appBarToolBarHeight = 48.0;
   static const desktopSidebarWidth = 230.0;
   static const mobilePageChangeDuration = 500;
   static const desktopPageChangeDuration = 1;
@@ -48,6 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.note_add_rounded),
             onPressed: _openNewDocument,
           ),
+          IconButton(
+            icon: const Icon(Icons.create_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EditorScreen(),
+              ),
+            ),
+          ),
           const LanguagePicker(),
           IconButton(
             icon: const Icon(Icons.settings_rounded),
@@ -65,41 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           children: [
             if (Responsive.isDesktop(context))
-              SizedBox(
-                width: desktopSidebarWidth,
-                child: Container(
-                  color: Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .backgroundColor,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: subpages
-                          .map(
-                            (e) => TextButton(
-                              onPressed: () => animateToSubPage(
-                                  subpages.indexOf(e),
-                                  desktopPageChangeDuration),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                child: Row(
-                                  children: [
-                                    e.icon,
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                      child: Text(e.label),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ),
+              HomeScreenSidebar(
+                desktopSidebarWidth: desktopSidebarWidth,
+                subpages: subpages,
+                desktopPageChangeDuration: desktopPageChangeDuration,
+                animateToSubPage: animateToSubPage,
               ),
             Expanded(
               child: PageView(
@@ -127,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
               type: BottomNavigationBarType.fixed,
               items: getSubpages(context)
                   .map((e) => BottomNavigationBarItem(
-                        icon: e.icon,
+                        icon: Icon(e.iconData),
                         label: e.label,
                       ))
                   .toList(),
@@ -137,15 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: !Responsive.isDesktop(context) &&
               (lastOpened != null || recentDocuments.values.toList().isNotEmpty)
           ? FloatingActionButton(
-              onPressed: () {
-                if (lastOpened == null) {
-                  final recentDocumentsOrdered =
-                      recentDocuments.values.toList();
-                  recentDocumentsOrdered.sort((a, b) => Document.compare(a, b));
-                  lastOpened = recentDocumentsOrdered.first;
-                }
-                _loadDocument(lastOpened!, fromRecentDocs: true);
-              },
+              onPressed: _openLastDocument,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               child: Icon(
                 Icons.local_library_rounded,
@@ -156,18 +128,27 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _openLastDocument() {
+    if (lastOpened == null) {
+      final recentDocumentsOrdered = recentDocuments.values.toList();
+      recentDocumentsOrdered.sort((a, b) => Document.compare(a, b));
+      lastOpened = recentDocumentsOrdered.first;
+    }
+    _loadDocument(lastOpened!, fromRecentDocs: true);
+  }
+
   /// An ordered list of labelled icons for available subpages.
   static List<LabelledIcon> getSubpages(BuildContext context) => [
         LabelledIcon(
-          icon: const Icon(Icons.account_balance_rounded),
+          iconData: Icons.account_balance_rounded,
           label: AppLocalizations.of(context)!.recent,
         ),
         LabelledIcon(
-          icon: const Icon(Icons.import_contacts_rounded),
+          iconData: Icons.import_contacts_rounded,
           label: AppLocalizations.of(context)!.library,
         ),
         LabelledIcon(
-          icon: const Icon(Icons.explore_rounded),
+          iconData: Icons.explore_rounded,
           label: AppLocalizations.of(context)!.discover,
         ),
       ];
