@@ -32,8 +32,6 @@ migrate_working_dir/
 .pub/
 /build/
 
-# Web related
-
 # Symbolication related
 app.*.symbols
 
@@ -46,3 +44,5 @@ app.*.map.json
 /android/app/release
 
 commit.txt
+
+..**
