@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:literaturamo/screens/editor/components/ribbon.dart';
+import 'package:literaturamo/screens/editor/components/sideview.dart';
 import 'package:literaturamo/screens/editor/components/text_field.dart';
 import 'package:literaturamo/utils/constants.dart';
 
@@ -12,13 +13,20 @@ class EditorScreen extends StatefulWidget {
 }
 
 class _EditorScreenState extends State<EditorScreen> {
+  bool enableSideview = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: const [
-          EditorRibbon(),
-          EditorTextField(),
+      body: Row(
+        children: [
+          Column(
+            children: const [
+              EditorRibbon(),
+              EditorTextField(),
+            ],
+          ),
+          if (enableSideview) const EditorSideview(),
         ],
       ),
       appBar: AppBar(

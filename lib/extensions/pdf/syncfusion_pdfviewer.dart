@@ -31,7 +31,6 @@ class SyncFusionPdfViewer extends FileViewer {
   Widget viewDocument(BuildContext context, Document doc,
       {bool invert = false, int? defaultPage, void Function()? onTap}) {
     debugPrint("Serving a file document.. $doc.");
-    throw 'Syncpdfview should not be used';
     _pdfViewerController = sfpdf.PdfViewerController();
     final Widget viewer;
     if (doc.isExternal) {

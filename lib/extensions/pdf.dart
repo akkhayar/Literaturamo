@@ -8,10 +8,10 @@ import 'package:literaturamo/utils/constants.dart';
 import 'dart:io';
 
 void main() {
-  // ContributionPoints.registerFileViewer(
-  // DocumentType.pdf, SyncFusionPdfViewer());
+  ContributionPoints.registerFileViewer(
+      DocumentType.pdf, SyncFusionPdfViewer());
 
-  ContributionPoints.registerFileViewer(DocumentType.pdf, PdfxPdfView());
+  // ContributionPoints.registerFileViewer(DocumentType.pdf, PdfxPdfView());
   // ContributionPoints.registerTextParser(_PdfTextParser());
 
   ContributionPoints.registerDocumentRegister(

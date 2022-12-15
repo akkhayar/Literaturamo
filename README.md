@@ -1,60 +1,32 @@
 # Literaturamo
 
-Idea board
+An app for reading text file types (pdf, epub, txt, etc...) with a built-in extension system. Users can extend many capabilities and add new ways to interact with the text file content, i.e., integrating a dictionary, a built-in translator, indexing, and so on...
 
-## Primary Frameworks for dependencies
-pdf_text:
-flutter_cached_pdfview: ^0.4.1 (Android & IOS)
-flutter_highlight: ^0.7.0
-
-## Built-in Extensions
-
-## Core Features
-
-### Theming
-
-#### Current Classifications:
-1. **Basic Dark**
-2. **Basic Light**
-3. **Solarized Dark**
-
-### Multiple Format Support
-
-[☑] Pdf <br>
-[☑] Text <br>
-[☑] Languages <br>
-[ ] Epub <br>
-
-### Condensed Mode
-
-### Read Together
-
-- IP connection techniques
-
-### TTS Mode
-### Reading Statistics
-### Net Portals
-
-## Preferences
-
-1. Themes
-2. Languages
+This application targets mobile phones and tablets.
 
 
-## Web-Compatible sustained file loading and saving
+## Extensions
 
-1.
+### Built-in Extensions
 
-## Settings
+### a. Views & Registerers
 
-1. TTS Voice Prototype
+1. PDF
+2. EPUB
+3. TXT
 
-TODO:
-1. Different colors for different formats
-2. Better skeleton loading for opening text files
-3. Too intensive textual parsing
+### b. Dictionaries
 
+1. English (the free dictionary API)
 
-Currently being worked:
-4. Rework dashboard design to be more conformant with modern design philosophies
-5. Writing capabilities
+### c. Themes
+
+1. Basic Dark
+2. Basic Light
+3. Solarized Dark
+
+### d. Other
+
+1. Read Together
+2. TTS Mode
+3. Reading Statistics
