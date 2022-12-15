@@ -1,6 +1,6 @@
 # Literaturamo
 
-An app for reading text file types (pdf, epub, txt, etc...) with a built-in extension system. Users can extend many capabilities and add new ways to interact with the text file content, i.e., integrating a dictionary, a built-in translator, indexing, and so on...
+Amy app for reading text file types (pdf, epub, txt, etc...) with a built-in extension system. Users can extend many capabilities and add new ways to interact with the text file content, i.e., integrating a dictionary, a built-in translator, indexing, and so on...
 
 This application targets mobile phones and tablets.
 
