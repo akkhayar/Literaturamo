@@ -10,7 +10,7 @@ import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/obsidian.dart';
 
 void main() {
-  ContributionPoints.registerFileViewer(DocumentType.txt, _TxtViewer());
+  ContributionPoint.registerFileViewer(DocumentType.txt, _TxtViewer());
 }
 
 /// A text viewer loads a text file at a specified destination and

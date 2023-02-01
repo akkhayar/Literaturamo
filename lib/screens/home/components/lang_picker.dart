@@ -37,8 +37,10 @@ class LanguagePicker extends StatelessWidget {
               (locale) => DropdownMenuItem(
                 value: locale,
                 child: Center(
-                  child:
-                      Text(Language.fromCode(locale.languageCode)?.emoji ?? ""),
+                  child: Text(Language.fromCode(locale.languageCode)
+                          ?.code
+                          .toUpperCase() ??
+                      ""),
                 ),
                 onTap: () => provider.setLocale(locale),
               ),

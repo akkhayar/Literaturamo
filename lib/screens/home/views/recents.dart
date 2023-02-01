@@ -6,16 +6,16 @@ import 'package:literaturamo/screens/viewer.dart';
 import 'package:literaturamo/utils/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
-import 'package:literaturamo/widgets/document.dart';
+import 'package:literaturamo/screens/home/components/document_tile.dart';
 
-class RecentScreen extends StatefulWidget {
-  const RecentScreen({Key? key}) : super(key: key);
+class RecentsView extends StatefulWidget {
+  const RecentsView({Key? key}) : super(key: key);
 
   @override
-  State<RecentScreen> createState() => _RecentScreenState();
+  State<RecentsView> createState() => _RecentsViewState();
 }
 
-class _RecentScreenState extends State<RecentScreen> {
+class _RecentsViewState extends State<RecentsView> {
   @override
   Widget build(BuildContext context) {
     return Column(

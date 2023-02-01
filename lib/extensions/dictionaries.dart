@@ -5,7 +5,7 @@ import 'package:literaturamo/utils/api.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
-  ContributionPoints.registerLanguageDictionary(EnglishLanguageDictionary());
+  ContributionPoint.registerLanguageDictionary(EnglishLanguageDictionary());
 }
 
 const api = "https://api.dictionaryapi.dev/api/v2/entries";
@@ -15,16 +15,16 @@ class EnglishLanguageDictionary implements LanguageDictionary {
   Language language = Language.english;
 
   @override
-  Future<DictionaryEntry> getDictionaryEntry(String word) async {
+  Future<DictionaryEntry?> getDictionaryEntry(String word) async {
     final endpoint = Uri.parse("$api/${language.code}/$word");
     late final http.Response res;
     try {
       res = await http.get(endpoint);
     } catch (e) {
-      return DictionaryEntry.invalid;
+      return null;
     }
     if (res.statusCode != 200) {
-      return DictionaryEntry.invalid;
+      return null;
     }
     final resp = jsonDecode(res.body);
     return DictionaryEntry.fromJson(word, language, resp[0]);

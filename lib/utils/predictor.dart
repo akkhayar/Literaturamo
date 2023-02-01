@@ -4,7 +4,7 @@ import 'package:literaturamo/utils/constants.dart';
 
 Future<List<String>> findClosest(Language language) async {
   final List<String> words =
-      await ContributionPoints.getDefinedWords(language)!.readAsLines();
+      await ContributionPoint.getDefinedWords(language)!.readAsLines();
   final fuz = Fuzzy(words);
   return fuz.list;
 }

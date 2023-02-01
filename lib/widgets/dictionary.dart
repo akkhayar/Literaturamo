@@ -7,13 +7,11 @@ import 'package:literaturamo/utils/constants.dart';
 /// A floating dialog box to display dictionary related content.
 class DictionaryDialog extends StatefulWidget {
   final Language language;
-  final Widget onCouldNotFind;
   final Widget onSearching;
   const DictionaryDialog({
     Key? key,
     required this.language,
     required this.onSearching,
-    required this.onCouldNotFind,
   }) : super(key: key);
 
   @override
@@ -28,7 +26,7 @@ class _DictionaryDialogState extends State<DictionaryDialog> {
   @override
   void initState() {
     super.initState();
-    dictionary = ContributionPoints.getLanguageDictionary(widget.language)!;
+    dictionary = ContributionPoint.getLanguageDictionary(widget.language)!;
   }
 
   void _setDefinition(String query) {
@@ -78,11 +76,7 @@ class _DictionaryDialogState extends State<DictionaryDialog> {
               debugPrint("Testing snapshot data ${snapshot.data}");
               if (snapshot.hasData) {
                 definition = null;
-                if (snapshot.data!.isValid) {
-                  return DefinitionWidget(entry: snapshot.data!);
-                } else {
-                  return widget.onCouldNotFind;
-                }
+                return DefinitionWidget(entry: snapshot.data!);
               } else {
                 return widget.onSearching;
               }

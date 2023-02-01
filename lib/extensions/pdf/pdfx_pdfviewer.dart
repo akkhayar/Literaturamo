@@ -36,7 +36,7 @@ class PdfxPdfView extends FileViewer {
     debugPrint("Page changed to $page ");
     if (page != null) {
       controller!.currentPage = page;
-      Events.turnedNewPage(doc!.canonicalName(), page);
+      Events.pageChanged(doc!.canonicalName(), page);
     }
   }
 }

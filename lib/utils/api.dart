@@ -14,7 +14,7 @@ typedef TextSelectionChanged = Future<OverlayEntry?> Function(
     TextSelectionChange change);
 
 /// A store for contributions that extend functionality into the App.
-class ContributionPoints {
+class ContributionPoint {
   static final Map<String, LanguageDictionary> _langDictionaries = {};
   static final Map<String, File> _definedWordsAssets = {};
   static final Map<String, FileViewer> _fileViewers = {};
@@ -85,7 +85,7 @@ class Events {
   static void openedDocument(Document doc) =>
       _openDocumentListeners.map((element) => element(doc)).toList();
 
-  static Future<void> turnedNewPage(
+  static Future<void> pageChanged(
       String canonicalName, int lastReadPageNo) async {
     final selected = Hive.box<Document>(recentDocsBoxName)
         .values
@@ -109,19 +109,21 @@ class Events {
       }
       _disposables.clear();
     } else {
-      _insertOverlays(Overlay.of(context)!, change);
+      _insertOverlays(Overlay.of(context), change);
     }
   }
 
   static void _insertOverlays(
       OverlayState state, TextSelectionChange change) async {
     final List<OverlayEntry> tmpDisposes = [];
+
     for (final listener in _textSelectionChangeListeners) {
       final overlay = await listener(change);
       if (overlay != null) {
         tmpDisposes.add(overlay);
       }
     }
+
     state.insertAll(tmpDisposes);
     _disposables.addAll(tmpDisposes);
   }

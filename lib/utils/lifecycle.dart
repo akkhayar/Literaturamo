@@ -12,7 +12,7 @@ import 'package:literaturamo/extensions/menus.dart' as menus_ext;
 import 'package:literaturamo/models/document.dart';
 // SENSITIVE AREA +-+-+-+-+-+-+-+-
 
-Future<void> setup() async {
+Future<void> startup() async {
   _loadExtensions();
   // if (Platform.isWindows) {
   //   _initDiscordRPC();

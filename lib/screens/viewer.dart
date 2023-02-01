@@ -29,12 +29,12 @@ class _ViewerScreenState extends State<ViewerScreen> {
   void initState() {
     super.initState();
     fileViewer = widget.fileViewer ??
-        ContributionPoints.getFileViewer(widget.document.type);
+        ContributionPoint.getFileViewer(widget.document.type);
     fileViewer.load(widget.document);
     invert =
         SettingBox.get(SettingBoxOptions.defaultFileViewerInversion) ?? false;
     hasTxtParser =
-        ContributionPoints.getTextParser(fileViewer.supportedDocType) != null;
+        ContributionPoint.getTextParser(fileViewer.supportedDocType) != null;
   }
 
   @override
@@ -82,6 +82,10 @@ class _ViewerScreenState extends State<ViewerScreen> {
     return [
       if (fileViewer.secondaryActions.isNotEmpty)
         PopupMenuButton(
+          icon: Icon(
+            Icons.more_vert_rounded,
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
           tooltip: "Other Options",
           color: Theme.of(context).scaffoldBackgroundColor,
           itemBuilder: (context) {
@@ -109,7 +113,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
     ];
   }
 
-  List<Widget> _actions() {
+  _actions() {
     return [
       IconButton(
         tooltip: "Invert Color",
@@ -164,10 +168,6 @@ class _ViewerScreenState extends State<ViewerScreen> {
             "Searching..",
             textAlign: TextAlign.center,
           ),
-          onCouldNotFind: Text(
-            "Could not find..",
-            textAlign: TextAlign.center,
-          ),
         );
       },
       transitionBuilder: (context, anim1, anim2, child) {
@@ -188,7 +188,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
           return ViewerScreen(
             document: widget.document,
             fileViewer:
-                ContributionPoints.getFileViewer(DocumentType.transcript),
+                ContributionPoint.getFileViewer(DocumentType.transcript),
             defaultPage: fileViewer.controller!
                 .currentPage, // CONTROLLER MAY BE NULL SOMETIMES SO FIX THIS
           );

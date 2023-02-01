@@ -1,12 +1,14 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:literaturamo/utils/responsive.dart';
-import 'package:literaturamo/screens/discover.dart';
+import 'package:literaturamo/screens/home/views/discover.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:literaturamo/screens/editor/editor_screen.dart';
 import 'package:literaturamo/screens/home/components/sidebar.dart';
-import 'package:literaturamo/screens/library.dart';
-import 'package:literaturamo/screens/recents.dart';
+import 'package:literaturamo/screens/home/views/library.dart';
+import 'package:literaturamo/screens/home/views/recents.dart';
+import 'package:literaturamo/screens/home/views/discover.dart';
+import 'package:literaturamo/screens/home/views/library.dart';
 import 'package:literaturamo/screens/viewer.dart';
 import 'package:literaturamo/utils/api.dart';
 import 'package:literaturamo/utils/constants.dart';
@@ -14,7 +16,7 @@ import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:literaturamo/widgets/lang_picker.dart';
+import 'package:literaturamo/screens/home/components/lang_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -35,6 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
   static const desktopPageChangeDuration = 1;
 
   @override
+  void initState() {
+    super.initState();
+    currentPageIndex = SettingBox.get(SettingBoxOptions.defaultPageIndex) ?? 0;
+    recentDocuments = Hive.box<Document>(recentDocsBoxName);
+    pageController = PageController(initialPage: currentPageIndex);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final subpages = getSubpages(context);
     return Scaffold(
@@ -47,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.note_add_rounded),
-            onPressed: _openNewDocument,
+            onPressed: _loadNewDocument,
           ),
           IconButton(
             icon: const Icon(Icons.create_rounded),
@@ -79,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 desktopSidebarWidth: desktopSidebarWidth,
                 subpages: subpages,
                 desktopPageChangeDuration: desktopPageChangeDuration,
-                animateToSubPage: animateToSubPage,
+                animateToSubPage: _animateToSubPage,
               ),
             Expanded(
               child: PageView(
@@ -91,11 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       .put(SettingBoxOptions.defaultPageIndex, idx);
                 },
                 scrollDirection: Axis.horizontal,
-                children: const [
-                  RecentScreen(),
-                  LibraryScreen(),
-                  DiscoverScreen()
-                ],
+                children: const [RecentsView(), LibraryView(), DiscoverView()],
               ),
             ),
           ],
@@ -111,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         label: e.label,
                       ))
                   .toList(),
-              onTap: (idx) => animateToSubPage(idx, mobilePageChangeDuration),
+              onTap: (idx) => _animateToSubPage(idx, mobilePageChangeDuration),
             )
           : null,
       floatingActionButton: !Responsive.isDesktop(context) &&
@@ -134,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
       recentDocumentsOrdered.sort((a, b) => Document.compare(a, b));
       lastOpened = recentDocumentsOrdered.first;
     }
-    _loadDocument(lastOpened!, fromRecentDocs: true);
+    _openDocument(lastOpened!, fromRecentDocs: true);
   }
 
   /// An ordered list of labelled icons for available subpages.
@@ -153,15 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ];
 
-  @override
-  void initState() {
-    super.initState();
-    currentPageIndex = SettingBox.get(SettingBoxOptions.defaultPageIndex) ?? 0;
-    recentDocuments = Hive.box<Document>(recentDocsBoxName);
-    pageController = PageController(initialPage: currentPageIndex);
-  }
-
-  void animateToSubPage(int index, int duration) {
+  void _animateToSubPage(int index, int duration) {
     currentPageIndex = index;
     pageController.animateToPage(
       index,
@@ -170,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _openNewDocument() async {
+  Future<void> _loadNewDocument() async {
     final picked = await FilePicker.platform.pickFiles(
       dialogTitle: "Open a Document",
       type: FileType.custom,
@@ -185,22 +183,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final preExisting = recentDocuments.values
         .firstWhereOrNull((element) => element.uri == file.path!);
 
-    final document = await ContributionPoints.getDocumentRegister(
-            picked.files[0].extension!)!
-        .getDocument(picked.files[0]);
+    final document =
+        await ContributionPoint.getDocumentRegister(picked.files[0].extension!)!
+            .getDocument(picked.files[0]);
     if (preExisting != null) {
       recentDocuments.put(
         recentDocuments.values.toList().indexOf(preExisting),
         document,
       );
     }
-    _loadDocument(
+    _openDocument(
       document,
       fromRecentDocs: preExisting != null,
     );
   }
 
-  void _loadDocument(Document doc, {bool fromRecentDocs = false}) {
+  void _openDocument(Document doc, {bool fromRecentDocs = false}) {
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -35,14 +35,6 @@ class DictionaryEntry {
       this.origin,
       required this.meanings});
 
-  static final invalid = DictionaryEntry(
-      language: Language.english, query: "", phonetics: [], meanings: [])
-    .._isValid = false;
-
-  get isValid {
-    return _isValid;
-  }
-
   factory DictionaryEntry.fromJson(
       String word, Language lang, Map<String, dynamic> json) {
     return DictionaryEntry(

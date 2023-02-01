@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:literaturamo/utils/constants.dart';
 
 void main() {
-  ContributionPoints.registerFileViewer(
+  ContributionPoint.registerFileViewer(
       DocumentType.transcript, _TranscriptViewer());
 }
 
@@ -19,12 +19,12 @@ class _TranscriptViewer extends FileViewer {
         );
 
   final FileViewer txtViewer =
-      ContributionPoints.getFileViewer(DocumentType.txt);
+      ContributionPoint.getFileViewer(DocumentType.txt);
   late TextParser txtParser;
 
   @override
   void load(Document document) {
-    txtParser = ContributionPoints.getTextParser(document.type)!;
+    txtParser = ContributionPoint.getTextParser(document.type)!;
   }
 
   @override

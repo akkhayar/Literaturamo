@@ -3,14 +3,14 @@ import 'package:literaturamo/utils/constants.dart';
 import 'package:literaturamo/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:literaturamo/utils/tasks.dart' as tasks;
+import 'package:literaturamo/utils/lifecycle.dart' as lifecycle;
 import 'package:flutter/services.dart';
-import 'package:literaturamo/widgets/lang_picker.dart';
+import 'package:literaturamo/screens/home/components/lang_picker.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
 
 void main() async {
-  await tasks.setup();
+  await lifecycle.startup();
   runApp(const App());
 }
 

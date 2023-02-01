@@ -5,7 +5,7 @@ import 'package:literaturamo/utils/api.dart';
 /// An abstract class that identifies a FileViewer.
 ///
 /// Implemented classes of [FileViewer] can be registered into to
-/// [ContributionPoints] at runtime into the associated store for
+/// [ContributionPoint] at runtime into the associated store for
 /// a specific [DocumentType] notated by the `supportedType` field
 /// of the class.
 ///

@@ -13,7 +13,7 @@
 //   // Timestamp of first pointer (selected) update
 //   Duration? _first;
 
-//   // Timestamp of latest pointer (selected) update
+//   // Timestamp of latest pointer (selected) updatek
 //   Duration? _last;
 
 //   // Signifies that the event is potentially a tap

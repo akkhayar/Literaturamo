@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:literaturamo/utils/constants.dart';
 
-class LibraryScreen extends StatefulWidget {
-  const LibraryScreen({Key? key}) : super(key: key);
+class LibraryView extends StatefulWidget {
+  const LibraryView({Key? key}) : super(key: key);
 
   @override
-  State<LibraryScreen> createState() => _LibraryScreenState();
+  State<LibraryView> createState() => _LibraryViewState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen> {
+class _LibraryViewState extends State<LibraryView> {
   @override
   Widget build(BuildContext context) {
     return const Center(

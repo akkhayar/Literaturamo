@@ -10,11 +10,13 @@ void main() {
 }
 
 Future<OverlayEntry?> _showDictionaryOverlay(TextSelectionChange change) async {
-  if (change.text.isEmpty) return null;
+  final query = change.text;
+  // dictionary will only work for single word selections
+  if (query.isEmpty || query.contains(" ")) return null;
 
-  debugPrint("Show dictionary called on ${change.text}");
+  debugPrint("Show dictionary called on $query");
 
-  final dict = ContributionPoints.getLanguageDictionary(Language.english);
+  final dict = ContributionPoint.getLanguageDictionary(Language.english);
   if (dict == null) return null;
 
   final DictionaryEntry? entry;
