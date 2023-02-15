@@ -2,9 +2,10 @@ import 'package:flutter/services.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/models/file_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:literaturamo/utils/api.dart';
-import 'package:literaturamo/utils/constants.dart';
-import 'package:literaturamo/widgets/dictionary.dart';
+import 'package:literaturamo/screens/viewer/components/bottom_drawer.dart';
+import 'package:literaturamo/api.dart';
+import 'package:literaturamo/constants.dart';
+import 'package:literaturamo/screens/viewer/components/dictionary.dart';
 
 class ViewerScreen extends StatefulWidget {
   final Document document;
@@ -24,6 +25,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
   late final bool hasTxtParser;
   late bool invert;
   bool inspect = true;
+  bool drawerOpened = false;
 
   @override
   void initState() {
@@ -49,21 +51,37 @@ class _ViewerScreenState extends State<ViewerScreen> {
               actions: _actions(),
             )
           : null,
-      body: fileViewer.viewDocument(
-        context,
-        widget.document,
-        invert: invert,
-        defaultPage: widget.defaultPage,
-        onTap: () {
-          setState(() => inspect = !inspect);
-          if (!inspect) {
-            SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-          } else {
-            SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-          }
-        },
+      body: Stack(
+        children: [
+          fileViewer.viewDocument(
+            context,
+            widget.document,
+            invert: invert,
+            defaultPage: widget.defaultPage,
+            onTap: () {
+              setState(() {
+                inspect = !inspect;
+                drawerOpened = false;
+              });
+
+              if (!inspect) {
+                SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+              } else {
+                SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+              }
+            },
+          ),
+          if (drawerOpened)
+            const Positioned(
+              left: 0,
+              bottom: 0,
+              child: BottomDrawer(
+                  child: DictionaryDialog(
+                language: Language.english,
+              )),
+            )
+        ],
       ),
-      bottomNavigationBar: _bottomAppBar(),
     );
   }
 
@@ -123,7 +141,9 @@ class _ViewerScreenState extends State<ViewerScreen> {
       IconButton(
         tooltip: "Dictionary",
         icon: const Icon(Icons.menu_book_rounded),
-        onPressed: _displayDictionary,
+        onPressed: () => setState(() {
+          drawerOpened = !drawerOpened;
+        }),
       ),
       ..._conditionalActions(),
       ..._secondaryActions(),
@@ -133,51 +153,6 @@ class _ViewerScreenState extends State<ViewerScreen> {
   void _invertColor() {
     SettingBox.put(SettingBoxOptions.defaultFileViewerInversion, !invert);
     setState(() => invert = !invert);
-  }
-
-  BottomAppBar? _bottomAppBar() => inspect && fileViewer.controller != null
-      ? BottomAppBar(
-          color: Theme.of(context).appBarTheme.backgroundColor,
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Theme.of(context).colorScheme.secondary,
-                  width: 1,
-                ),
-              ),
-            ),
-            margin: const EdgeInsets.only(bottom: 3),
-            child: Text(
-                textAlign: TextAlign.center,
-                "${fileViewer.controller!.currentPage}/${widget.document.totalPageNum}"),
-          ))
-      : null;
-
-  void _displayDictionary() {
-    // ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0)
-    showGeneralDialog(
-      context: context,
-      barrierLabel: "FileViewer",
-      barrierDismissible: true,
-      transitionDuration: const Duration(milliseconds: 255),
-      pageBuilder: (context, anim1, anim2) {
-        return const DictionaryDialog(
-          language: Language.english,
-          onSearching: Text(
-            "Searching..",
-            textAlign: TextAlign.center,
-          ),
-        );
-      },
-      transitionBuilder: (context, anim1, anim2, child) {
-        return SlideTransition(
-          position: Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
-              .animate(anim1),
-          child: child,
-        );
-      },
-    );
   }
 
   void _transcribe() {

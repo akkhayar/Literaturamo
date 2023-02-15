@@ -1,6 +1,6 @@
 import 'package:literaturamo/models/document.dart';
 import 'package:flutter/material.dart';
-import 'package:literaturamo/utils/api.dart';
+import 'package:literaturamo/api.dart';
 
 /// An abstract class that identifies a FileViewer.
 ///

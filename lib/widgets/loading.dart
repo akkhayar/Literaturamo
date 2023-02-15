@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:literaturamo/extensions/transcript.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 
 class Silhouette extends StatelessWidget {
   final double? height, width;

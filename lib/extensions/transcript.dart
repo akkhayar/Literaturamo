@@ -1,9 +1,9 @@
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/models/file_viewer.dart';
 import 'package:literaturamo/models/text_parser.dart';
-import 'package:literaturamo/utils/api.dart';
+import 'package:literaturamo/api.dart';
 import 'package:flutter/material.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 
 void main() {
   ContributionPoint.registerFileViewer(

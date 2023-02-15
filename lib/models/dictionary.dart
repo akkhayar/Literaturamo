@@ -1,4 +1,4 @@
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 
 typedef StrMap = Map<String, String>;
 

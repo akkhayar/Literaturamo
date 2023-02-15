@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:literaturamo/models/dictionary.dart';
-import 'package:literaturamo/utils/constants.dart';
-import 'package:literaturamo/utils/api.dart';
+import 'package:literaturamo/constants.dart';
+import 'package:literaturamo/api.dart';
 import 'package:http/http.dart' as http;
 
 void main() {

@@ -3,12 +3,14 @@ import 'package:literaturamo/models/menus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:literaturamo/models/dictionary.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:collection/collection.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/models/file_viewer.dart';
 import 'package:literaturamo/models/text_parser.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as developer;
+
+void log(String msg) => developer.log(msg, name: "literaturamo.api");
 
 typedef TextSelectionChanged = Future<OverlayEntry?> Function(
     TextSelectionChange change);
@@ -22,27 +24,39 @@ class ContributionPoint {
   static final List<ContextMenu> _selectionContextMenus = [];
   static final Map<String, DocumentRegister> _documentRegisters = {};
 
-  static registerLanguageDictionary(LanguageDictionary provider) =>
-      _langDictionaries.putIfAbsent(provider.language.code, () => provider);
+  static registerLanguageDictionary(LanguageDictionary provider) {
+    _langDictionaries.putIfAbsent(provider.language.code, () => provider);
+    log("Registered ${provider.language} language dictionary provider $provider.");
+  }
 
-  static registerFileViewer(DocumentType type, FileViewer provider) => {
-        if (type == provider.supportedDocType)
-          _fileViewers.putIfAbsent(type.extension, () => provider)
-        else
-          throw ("${provider.supportedDocType} does not match $type to register as file viewer.")
-      };
+  static registerFileViewer(DocumentType type, FileViewer provider) {
+    if (type == provider.supportedDocType) {
+      _fileViewers.putIfAbsent(type.extension, () => provider);
+    } else {
+      throw ("${provider.supportedDocType} does not match $type to register as file viewer.");
+    }
+    log("Registered $type document view provider $provider.");
+  }
 
-  static registerTextParser(TextParser provider) => _textParsers.putIfAbsent(
-      provider.supportedType.extension, () => provider);
+  static registerTextParser(TextParser provider) {
+    _textParsers.putIfAbsent(provider.supportedType.extension, () => provider);
+    log("Registered ${provider.supportedType} text parser $provider");
+  }
 
-  static registerSelectionContextMenu(ContextMenu provider) =>
-      _selectionContextMenus.add(provider);
+  static registerSelectionContextMenu(ContextMenu provider) {
+    _selectionContextMenus.add(provider);
+    log("Registered selection context menu $provider.");
+  }
 
-  static registerDefinedWords(Language language, File asset) =>
-      _definedWordsAssets.putIfAbsent(language.code, () => asset);
+  static registerDefinedWords(Language language, File asset) {
+    _definedWordsAssets.putIfAbsent(language.code, () => asset);
+    log("Registered $language language defined words asset $asset.");
+  }
 
-  static registerDocumentRegister(String ext, DocumentRegister register) =>
-      _documentRegisters.putIfAbsent(ext, () => register);
+  static registerDocumentRegister(String ext, DocumentRegister register) {
+    _documentRegisters.putIfAbsent(ext, () => register);
+    log("Registered $ext extension document registerer $register.");
+  }
 
   static List<ContextMenu> getSelectionContextMenus(Language language) =>
       _selectionContextMenus;
@@ -85,17 +99,12 @@ class Events {
   static void openedDocument(Document doc) =>
       _openDocumentListeners.map((element) => element(doc)).toList();
 
-  static Future<void> pageChanged(
-      String canonicalName, int lastReadPageNo) async {
-    final selected = Hive.box<Document>(recentDocsBoxName)
-        .values
-        .firstWhereOrNull(
-            (element) => element.canonicalName() == canonicalName);
+  static Future<void> pageChanged(Document document, int lastReadPageNo) async {
+    document.lastReadPageNo = lastReadPageNo;
+    await document.save();
 
-    if (selected != null) {
-      selected.lastReadPageNo = lastReadPageNo;
-      await selected.save();
-    }
+    log("Event pageChanged triggered: '${document.canonicalName()}' lastReadPageNo set to $lastReadPageNo.");
+
     for (final listener in _readNewPageListeners) {
       listener(lastReadPageNo);
     }

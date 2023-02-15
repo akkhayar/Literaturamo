@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 
 class HomeScreenSidebar extends StatelessWidget {
   const HomeScreenSidebar({

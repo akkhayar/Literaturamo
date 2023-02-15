@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 
 part 'document.g.dart';
 
@@ -45,11 +45,11 @@ class Document extends HiveObject {
   @HiveField(3)
   final DocumentType type;
   @HiveField(4)
-  final String? uri;
+  final String uri;
   @HiveField(5)
   final String? programmingLang;
   @HiveField(6)
-  int? lastReadPageNo;
+  int lastReadPageNo = 0;
   @HiveField(7)
   final String? authorName;
 
@@ -57,9 +57,7 @@ class Document extends HiveObject {
   Uint8List? uintData;
 
   bool get isExternal {
-    return kIsWeb
-        ? false
-        : uri!.startsWith("http://") || uri!.startsWith("https://");
+    return uri.startsWith("http://") || uri.startsWith("https://");
   }
 
   Document(this.title, this.authorName, this.date, this.totalPageNum, this.type,

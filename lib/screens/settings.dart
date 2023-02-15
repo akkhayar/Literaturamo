@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class SettingScreen extends StatefulWidget {

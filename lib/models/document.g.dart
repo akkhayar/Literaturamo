@@ -24,7 +24,7 @@ class DocumentAdapter extends TypeAdapter<Document> {
       fields[3] as DocumentType,
       fields[4] as String,
       programmingLang: fields[5] as String?,
-    )..lastReadPageNo = fields[6] as int?;
+    )..lastReadPageNo = fields[6] as int;
   }
 
   @override

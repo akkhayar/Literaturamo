@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
+import 'dart:developer' as developer;
+
+void logMain(String msg) => developer.log(msg, name: "literaturamo.main");
 
 /// Application Title for internal use
 const String appTitle = "Literaturamo";
@@ -65,6 +68,7 @@ class LibThemes {
   LibThemes._();
 
   static ThemeData _makeTheme({
+    required bool isDarkThemed,
     required Color accentColor,
     required Color onAccent,
     required Color primaryColor,
@@ -111,7 +115,7 @@ class LibThemes {
         ),
       ),
       colorScheme: ColorScheme(
-        brightness: Brightness.light,
+        brightness: isDarkThemed ? Brightness.dark : Brightness.light,
         primary: primaryColor,
         onPrimary: onPrimary,
         secondary: accentColor,
@@ -146,6 +150,7 @@ class LibThemes {
   }
 
   static final basicDark = _makeTheme(
+    isDarkThemed: true,
     accentColor: LibColors.peach,
     onAccent: Colors.white,
     primaryColor: Colors.blue,

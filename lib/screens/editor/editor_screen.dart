@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:literaturamo/screens/editor/components/ribbon.dart';
 import 'package:literaturamo/screens/editor/components/sideview.dart';
 import 'package:literaturamo/screens/editor/components/text_field.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/constants.dart';
 
 class EditorScreen extends StatefulWidget {
   const EditorScreen({super.key});

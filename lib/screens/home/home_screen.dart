@@ -3,20 +3,16 @@ import 'package:literaturamo/utils/responsive.dart';
 import 'package:literaturamo/screens/home/views/discover.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:literaturamo/screens/editor/editor_screen.dart';
 import 'package:literaturamo/screens/home/components/sidebar.dart';
 import 'package:literaturamo/screens/home/views/library.dart';
 import 'package:literaturamo/screens/home/views/recents.dart';
-import 'package:literaturamo/screens/home/views/discover.dart';
-import 'package:literaturamo/screens/home/views/library.dart';
-import 'package:literaturamo/screens/viewer.dart';
-import 'package:literaturamo/utils/api.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/screens/viewer/viewer_screen.dart';
+import 'package:literaturamo/api.dart';
+import 'package:literaturamo/constants.dart';
 import 'package:literaturamo/models/document.dart';
 import 'package:literaturamo/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:literaturamo/screens/home/components/lang_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -60,16 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: _loadNewDocument,
           ),
           IconButton(
-            icon: const Icon(Icons.create_rounded),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const EditorScreen(),
-              ),
-            ),
-          ),
-          const LanguagePicker(),
-          IconButton(
             icon: const Icon(Icons.settings_rounded),
             tooltip: "Settings",
             onPressed: () => Navigator.push(
@@ -96,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 controller: pageController,
                 onPageChanged: (idx) {
                   setState(() => currentPageIndex = idx);
-                  debugPrint("Setting default page to $idx");
+                  logMain("Setting homepage default page to index $idx.");
                   Hive.box(settingsBoxName)
                       .put(SettingBoxOptions.defaultPageIndex, idx);
                 },
@@ -199,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openDocument(Document doc, {bool fromRecentDocs = false}) {
+    logMain("Opening new document at ${doc.uri}.");
     Navigator.push(
       context,
       MaterialPageRoute(

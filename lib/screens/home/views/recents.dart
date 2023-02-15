@@ -2,10 +2,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:literaturamo/models/document.dart';
-import 'package:literaturamo/screens/viewer.dart';
-import 'package:literaturamo/utils/constants.dart';
+import 'package:literaturamo/screens/viewer/viewer_screen.dart';
+import 'package:literaturamo/constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:collection/collection.dart';
 import 'package:literaturamo/screens/home/components/document_tile.dart';
 
 class RecentsView extends StatefulWidget {
@@ -54,7 +53,7 @@ class _RecentsViewState extends State<RecentsView> {
   }
 
   void _openDocument(Document doc) {
-    debugPrint("Opening document ${doc.uri} at ${doc.lastReadPageNo}");
+    logMain("Opening recent document ${doc.uri} at ${doc.lastReadPageNo}");
     Navigator.push(
       context,
       MaterialPageRoute(
